@@ -124,7 +124,7 @@ async function callOpenRouter(system: string, user: string, maxTokens: number): 
 
 /** One entry point for every AI feature, dispatched by key type. */
 async function callText(system: string, user: string, maxTokens: number): Promise<string> {
-  if (!getApiKey()) throw new Error('No API key set — add one in Settings.');
+  if (!getApiKey()) throw new Error('No API key set. Add one in Settings.');
   return provider() === 'anthropic'
     ? callAnthropic(system, user, maxTokens)
     : callOpenRouter(system, user, maxTokens);
@@ -141,14 +141,15 @@ function extractJson(text: string): string {
 }
 
 const CARD_SCHEMA_DOC = `Card formats (every card needs a unique "id" string):
-- {"id","type":"mcq","prompt","choices":[4 strings],"answer":<index of correct choice>,"explanation"} — optional "code" string shown as a code block. Choices are shuffled at display time, so never write "all of the above".
-- {"id","type":"flash","front","back"} — back must be written as a model spoken answer the learner rehearses aloud (60 seconds, complete sentences, the way a strong candidate would say it).
+- {"id","type":"mcq","prompt","choices":[4 strings],"answer":<index of correct choice>,"explanation"} with optional "code" string shown as a code block. Choices are shuffled at display time, so never write "all of the above".
+- {"id","type":"flash","front","back"} where back must be written as a model spoken answer the learner rehearses aloud (60 seconds, complete sentences, the way a strong candidate would say it).
 - {"id","type":"fill","prompt","code":<snippet containing ____ exactly once>,"answers":[accepted strings],"distractors":[3 wrong tokens],"explanation"}
-- {"id","type":"tf","prompt":<a statement to judge>,"answer":<true|false>,"explanation"} — optional "code". Make false statements plausibly wrong, not silly.
-- {"id","type":"order","prompt","items":[3-6 steps in CORRECT order],"explanation"} — steps/pipeline stages/code lines the learner arranges; they see them shuffled.
+- {"id","type":"tf","prompt":<a statement to judge>,"answer":<true|false>,"explanation"} with optional "code". Make false statements plausibly wrong, not silly.
+- {"id","type":"order","prompt","items":[3-6 steps in CORRECT order],"explanation"} for steps/pipeline stages/code lines the learner arranges; they see them shuffled.
 Inline code in any text field uses backticks. Explanations are 1-2 sentences stating WHY.
 Style rules:
 - NEVER use em dashes (—) anywhere in card text. Use a colon, comma, parentheses, or a separate sentence instead.
+- Answer length must carry no signal. In every mcq, all 4 choices must be roughly the same length (longest at most ~1.3x the shortest, in characters); the correct choice must not be the longest, most detailed, or most hedged option any more often than chance. Same for fill distractors: match the answer's token length and casing.
 - No walls of text: when a flash back covers a pipeline, checklist, or more than ~3 steps, format it as numbered or labeled lines separated by \\n (rendered as real line breaks). Never write a paragraph-length arrow chain.`;
 
 export interface GenerateOptions {
@@ -198,7 +199,7 @@ export interface RecallResult {
 /** Grade a spoken/typed answer against the card's back as rubric. */
 export async function gradeRecall(front: string, rubric: string, answer: string): Promise<RecallResult> {
   const text = await callText(
-    `You grade interview-prep recall attempts. Compare the learner's answer to the rubric (the model answer). Score SUBSTANCE, not phrasing — synonyms and different orderings are fine; missing core concepts are not. Respond with ONLY JSON: {"score":<0-100>,"feedback":"<1-2 sentences: what was right, what was missing — address the learner as 'you'>"}`,
+    `You grade interview-prep recall attempts. Compare the learner's answer to the rubric (the model answer). Score SUBSTANCE, not phrasing: synonyms and different orderings are fine; missing core concepts are not. Respond with ONLY JSON: {"score":<0-100>,"feedback":"<1-2 sentences: what was right, what was missing; address the learner as 'you'>"}`,
     `Question: ${front}\n\nModel answer (rubric):\n${rubric}\n\nLearner's answer:\n${answer}`,
     1024,
   );
