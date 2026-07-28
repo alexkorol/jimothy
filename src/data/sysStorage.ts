@@ -90,8 +90,8 @@ export const sysStorage: Deck = {
       prompt: 'Under read committed (the Postgres default), which anomalies can still occur?',
       choices: [
         'Non-repeatable and phantom reads, but never dirty reads',
-        'Dirty reads only, because the default level takes no locks while reading',
-        'None: read committed prevents all three, which is exactly why Postgres made it the default',
+        'Dirty reads only: the default takes no locks while reading',
+        'None: preventing all three is why Postgres made it the default',
         'All three, since only serializable prevents any anomaly at all',
       ],
       answer: 0,
@@ -136,9 +136,9 @@ export const sysStorage: Deck = {
       type: 'mcq',
       prompt: 'Ingesting a heavy stream of sensor events; reads are rare. B-tree or LSM engine?',
       choices: [
-        'LSM: sequential appends and batched flushes beat in-place page updates for write throughput',
-        'B-tree: in-place page updates avoid background compaction, so sustained ingestion stays smoother over time',
-        'LSM, because checking the memtable first makes its reads faster than a B-tree lookup',
+        'LSM: sequential appends and batched flushes beat in-place updates',
+        'B-tree: in-place updates avoid compaction, so ingestion stays smoother',
+        'LSM, because memtable checks make reads faster than a B-tree',
         'B-tree, because LSM engines cannot serve range scans over sorted keys',
       ],
       answer: 0,
@@ -172,10 +172,10 @@ export const sysStorage: Deck = {
       type: 'mcq',
       prompt: 'A dashboard join across five tables is slow, so you consider storing a precomputed denormalized copy. The real tradeoff?',
       choices: [
-        'Faster reads, but every write must now update multiple copies consistently, risking drift',
-        'More disk usage: storing the same data twice roughly doubles storage, which is the main cost at scale',
-        'None: normalization is an academic concern, and modern query planners erase the difference anyway',
-        'Slower reads in exchange for simpler writes',
+        'Faster reads, but every write must update multiple copies, risking drift',
+        'More disk usage: storing the data twice roughly doubles storage',
+        'None: modern query planners erase the difference anyway',
+        'Slower reads in exchange for simpler, cheaper write paths',
       ],
       answer: 0,
       explanation:

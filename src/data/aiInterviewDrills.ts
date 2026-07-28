@@ -25,10 +25,10 @@ export const aiInterviewDrills: Deck = {
       type: 'mcq',
       prompt: 'Your RAG bot answers well but never cites sources. First thing to check?',
       choices: [
-        'The prompt: are citations explicitly instructed AND demonstrated in the expected output format?',
-        'The embedding model: weak embeddings return chunks stripped of their source metadata, leaving nothing to cite',
-        'The vector database index: citation support must be enabled at index build time or source IDs are discarded',
-        'The GPU drivers',
+        'The prompt: are citations instructed and shown in the expected output format?',
+        'The embedding model: weak embeddings strip source metadata from chunks',
+        'The vector index: citation support has to be enabled when the index is first built',
+        'The GPU drivers: mismatched CUDA versions corrupt retrieved chunk metadata',
       ],
       answer: 0,
       explanation:
@@ -44,7 +44,7 @@ export const aiInterviewDrills: Deck = {
       id: 'aid-token-math',
       type: 'mcq',
       prompt: 'Quick estimate: a 500-word document is roughly how many tokens?',
-      choices: ['~650–700 (≈1.3 tokens per English word)', '~250 (≈0.5 tokens per word, since frequent words merge into shared tokens)', '~500 exactly (BPE tokenizers split on whitespace, one token per word)', '~2,000 (≈4 tokens per word, roughly one per syllable)'],
+      choices: ['~650–700 (≈1.3 tokens per English word)', '~250 (≈0.5 tokens per word after merges)', '~500 (one token per whitespace-split word)', '~2,000 (≈4 tokens per word, one per syllable)'],
       answer: 0,
       explanation:
         'The 1.3×-words rule (or ~4 chars/token) powers every cost and context estimate. Code tokenizes worse (~2×).',
@@ -60,10 +60,10 @@ export const aiInterviewDrills: Deck = {
       type: 'mcq',
       prompt: 'Model returns valid JSON in dev; in production ~2% of responses are cut off mid-object. Likely cause?',
       choices: [
-        'max_tokens truncation on longer inputs: raise the cap, validate + retry on parse failure, or use structured output',
-        'Provider load shedding: under high traffic, requests silently route to quantized fallback models that lose strict JSON compliance',
-        'Network packet loss clipping the tail of long streamed responses',
-        'Temperature drift',
+        'max_tokens truncation on longer inputs: raise the cap, validate and retry on failure',
+        'Provider load shedding: heavy traffic silently routes to fallback models with looser JSON',
+        'Network packet loss clipping the tail end of long streamed responses',
+        'Temperature drift: sampling noise accumulates over long generations',
       ],
       answer: 0,
       explanation:
@@ -80,10 +80,10 @@ export const aiInterviewDrills: Deck = {
       type: 'mcq',
       prompt: 'A user pastes a 300-page contract; it exceeds the context window. Best strategy ladder?',
       choices: [
-        'Depends on the task: RAG over the doc for Q&A; hierarchical map-reduce summarization for a summary; never silently truncate the middle',
-        'Truncate to the first N pages, silently: contracts front-load the operative clauses, so anything past the cap is boilerplate the model can safely skip',
+        'Depends on the task: RAG over the doc for Q&A, map-reduce for a summary',
+        'Truncate to the first N pages: contracts front-load the operative clauses',
         'Refuse documents over the window: a partial answer is worse than none',
-        'Always summarize first regardless of task: a compressed version fits any window and preserves what downstream tasks need',
+        'Always summarize first: a compressed version fits any window and any task',
       ],
       answer: 0,
       explanation:
@@ -135,14 +135,14 @@ export const aiInterviewDrills: Deck = {
       type: 'mcq',
       prompt: '"Our bot hallucinates. Fix it.": the strongest opening move in your answer?',
       choices: [
-        'Quantify it first: build a groundedness eval to measure the rate, THEN apply grounding/citations/abstention; you can’t fix what you can’t measure',
-        'Switch to the biggest model available: hallucination is a capability gap, and frontier-scale models have effectively trained it away',
-        'Set temperature to 0: hallucinations are sampling noise, so greedy decoding removes the randomness that produces them',
-        'Add "do not hallucinate" and "only state verified facts" to the system prompt: instruction-tuned models comply with explicit directives, so this closes the gap',
+        'Quantify it first: build a groundedness eval, then apply targeted mitigations',
+        'Switch to the biggest model: hallucination is a capability gap scale closes',
+        'Set temperature to 0: hallucinations are noise greedy decoding removes',
+        'Add "do not hallucinate" to the system prompt: tuned models obey explicit directives',
       ],
       answer: 0,
       explanation:
-        'Measurement before mitigation, every time. The other three options are real things people do: naming why each falls short (cost, marginal, mostly placebo) earns the follow-up respect.',
+        'Measurement before mitigation, every time: grounding, citations, and abstention come after the eval exists, because you can’t fix what you can’t measure. The other three options are real things people do: naming why each falls short (cost, marginal, mostly placebo) earns the follow-up respect.',
     },
   ],
 };

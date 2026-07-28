@@ -55,10 +55,10 @@ export const behStarMethod: Deck = {
       type: 'mcq',
       prompt: 'A candidate spends two minutes on the company, the org chart, and the project history before reaching what they did. The failure?',
       choices: [
-        'Inverted timing: Situation should be one or two sentences; the Action is what gets graded',
-        'Not enough context: interviewers cannot judge the Action fairly without the org chart, the stakeholders, and the project history first',
-        'None, if the story is complex; a hard problem earns a longer setup, and cutting context makes the win look smaller',
-        'They should skip the Situation entirely and open with the Action',
+        'Inverted timing: the Situation should be a sentence or two; the Action gets graded',
+        'Not enough context: interviewers cannot judge the Action without the full org picture',
+        'None, if the story is complex; a hard problem earns a longer setup',
+        'They should skip the Situation entirely and open the story with the Action',
       ],
       answer: 0,
       explanation:
@@ -70,9 +70,9 @@ export const behStarMethod: Deck = {
       prompt: 'A story ends with "...so I refactored the pipeline and moved on to the next project." What is missing?',
       choices: [
         'The Result: without an outcome the story is an anecdote, not evidence the action worked',
-        'Nothing: interviewers are engineers, the technical work speaks for itself, and stating outcomes sounds like bragging',
-        'More technical detail about the refactor, since implementation depth is what separates strong candidates',
-        'A line about how the team felt about the work',
+        'Nothing: the work speaks for itself, and stating outcomes sounds like bragging',
+        'More technical depth on the refactor, which is what separates strong candidates',
+        'A line about how the team felt about the work and the collaboration',
       ],
       answer: 0,
       explanation:
@@ -83,10 +83,10 @@ export const behStarMethod: Deck = {
       type: 'mcq',
       prompt: 'A candidate tells a dramatic outage story, but every action was taken by the on-call senior while they watched. The problem?',
       choices: [
-        'No personal agency: being present for a crisis proves nothing; pick a story where you acted',
-        'Outage stories are too negative for interviews: pick stories where everything ran smoothly on your watch',
-        'The story needs more technical depth about the outage',
-        'They should retell it with themselves performing the key actions, since interviewers cannot verify who did what',
+        'No personal agency: watching a crisis proves nothing; pick a story where you acted',
+        'Outage stories are too negative for interviews: pick stories where things ran smoothly',
+        'The story needs more technical depth about the outage and its root cause',
+        'They should retell it with themselves performing the key actions',
       ],
       answer: 0,
       explanation:
@@ -97,10 +97,10 @@ export const behStarMethod: Deck = {
       type: 'mcq',
       prompt: 'In a conflict story, the candidate explains at length how a teammate\'s sloppy work caused the problem. How does this land?',
       choices: [
-        'Badly: blame previews how you will talk about their team; keep the other party neutral, focus on your handling',
-        'Well: it accurately establishes the Situation, and interviewers respect candor about what really happened and who caused it',
-        'Well, as long as the teammate really was at fault and you can back the account up with specifics',
-        'Neutrally: interviewers only listen to the Action anyway',
+        'Badly: blame previews how you will talk about their team; keep the other party neutral',
+        'Well: it establishes the Situation, and interviewers respect candor about what happened',
+        'Well, as long as the teammate really was at fault and you have specifics',
+        'Neutrally: interviewers only really listen to the Action section anyway',
       ],
       answer: 0,
       explanation:
@@ -111,10 +111,10 @@ export const behStarMethod: Deck = {
       type: 'mcq',
       prompt: '"My biggest weakness is that I\'m a perfectionist." Why does this answer fail?',
       choices: [
-        'It is a strength in disguise, so it signals evasion; the question tests self-awareness and honesty',
-        'Perfectionism is too common; a rarer, more memorable weakness would make you stand out from other candidates',
-        'It only fails if the role does not value quality',
-        'It does not fail: it shows high standards while staying safe, which is exactly the balance the question rewards',
+        'A strength in disguise signals evasion; the question tests honest self-assessment',
+        'Perfectionism is too common; a rarer weakness would make you stand out',
+        'It only fails when the role does not explicitly value quality and attention to detail',
+        'It does not fail: it shows high standards while playing it safe',
       ],
       answer: 0,
       explanation:
@@ -126,9 +126,9 @@ export const behStarMethod: Deck = {
       prompt: 'Which Result statement is strongest?',
       choices: [
         '"Deploy time dropped from 45 minutes to 8, and two other teams adopted the script"',
-        '"The project was a big success, leadership was very happy, and it got a shout-out at the quarterly all-hands"',
-        '"We shipped on time"',
-        '"It significantly improved developer productivity and morale across the whole engineering organization"',
+        '"The project was a big success and got a shout-out at the all-hands"',
+        '"We shipped the project on time and everyone was pleased with it"',
+        '"It significantly improved developer productivity across the organization"',
       ],
       answer: 0,
       explanation:

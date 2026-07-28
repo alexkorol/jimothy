@@ -15,8 +15,8 @@ export const jsGotchas: Deck = {
       code: 'console.log(0.1 + 0.2 === 0.3);\nconsole.log(0.1 + 0.2);',
       choices: [
         'false, then 0.30000000000000004',
-        'true, then 0.3',
-        'false, then 0.3 (console.log rounds)',
+        'true, then 0.3: the sum is exact',
+        'false, then 0.3 (it rounds on print)',
         'true, then 0.30000000000000004',
       ],
       answer: 0,
@@ -79,8 +79,8 @@ export const jsGotchas: Deck = {
       choices: [
         '[ <3 empty items> ]: three holes, untouched',
         "['x', 'x', 'x']: map visits every index up to length",
-        '[undefined, undefined, undefined]: holes read as undefined, so map passes them through',
-        'It throws a RangeError',
+        '[undefined, undefined, undefined]: holes read as undefined',
+        'It throws a RangeError for the invalid length',
       ],
       answer: 0,
       explanation:

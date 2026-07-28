@@ -33,10 +33,10 @@ export const patternsLinked: Deck = {
       type: 'mcq',
       prompt: 'Find the middle of a linked list in one pass?',
       choices: [
-        'Fast/slow pointers: fast moves 2, slow moves 1; when fast ends, slow is at the middle',
-        'Count nodes, then walk n/2 from the head: a singly linked list cannot do better than two passes',
-        'Recursion to the end and back, decrementing a depth counter on the return',
-        'Convert to an array first',
+        'Fast/slow pointers: fast moves 2, slow 1; slow ends at the middle',
+        'Count the nodes, then walk n/2 from the head in a second pass',
+        'Recurse to the end, decrementing a depth counter on the way back',
+        'Copy the nodes into an array first and index the middle',
       ],
       answer: 0,
       explanation:
@@ -48,9 +48,9 @@ export const patternsLinked: Deck = {
       prompt: 'Detect a cycle in O(1) space?',
       choices: [
         'Floyd’s: fast/slow pointers; if they ever meet, there’s a cycle',
-        'Store visited nodes in a set and stop on a repeat (correct, but that’s O(n) space)',
-        'Impossible in O(1) space: detection requires remembering visited nodes',
-        'Check if length exceeds 10,000',
+        'Store every visited node in a set and stop on a repeat',
+        'Impossible in O(1) space: cycle detection must remember visited nodes',
+        'Check whether the walk exceeds 10,000 nodes without ending',
       ],
       answer: 0,
       explanation:
@@ -71,9 +71,9 @@ export const patternsLinked: Deck = {
       type: 'mcq',
       prompt: 'Merging two sorted linked lists: the standard shape?',
       choices: [
-        'Dummy head + tail pointer; repeatedly attach the smaller head; splice the leftover at the end',
-        'Concatenate both into an array, sort it, rebuild the list: O((n+m) log(n+m)) is unavoidable anyway',
-        'Recursively swap every pair',
+        'Dummy head + tail: attach the smaller head, splice the leftover',
+        'Concatenate into an array, sort, rebuild: O((n+m) log(n+m))',
+        'Recursively swap adjacent pairs until both lists are exhausted',
         'Interleave alternating nodes, then bubble out-of-order pairs into place',
       ],
       answer: 0,
@@ -102,9 +102,9 @@ export const patternsLinked: Deck = {
       prompt: 'Why is `collections.deque` the queue, and a plain list not?',
       choices: [
         'deque pops from the left in O(1); list.pop(0) shifts everything. O(n)',
-        'Lists cannot pop from the front at all: list.pop() accepts no index argument',
-        'deque keeps its elements sorted automatically, so the front is always the minimum',
-        'deque holds more elements',
+        'Lists cannot pop the front: list.pop() accepts no index argument',
+        'deque keeps its elements sorted, so the front is the minimum',
+        'deque holds more elements than a list before resizing',
       ],
       answer: 0,
       explanation:
@@ -118,7 +118,7 @@ export const patternsLinked: Deck = {
         'Stack → DFS, undo, matched brackets; Queue → BFS, level order, task scheduling',
         'Stack → BFS, level order, task scheduling; Queue → DFS, undo, matched brackets',
         'Both are interchangeable everywhere: only push/pop discipline differs',
-        'Queues are only for multithreading',
+        'Queues are only for multithreading and producer/consumer work',
       ],
       answer: 0,
       explanation:
@@ -129,10 +129,10 @@ export const patternsLinked: Deck = {
       type: 'mcq',
       prompt: 'Design a stack with O(1) getMin(): the trick?',
       choices: [
-        'A parallel stack of "min so far" values, pushed and popped in lockstep',
-        'Scan the stack on each getMin call',
-        'Keep a second, sorted copy of the stack and read the min from its top in O(1)',
-        'Store the min in one variable, rescanning only when the min itself is popped',
+        'A parallel min-so-far stack, pushed and popped in lockstep',
+        'Scan the whole stack for the minimum on each getMin call',
+        'Keep a sorted copy of the stack; read the min off its top',
+        'Store the min in one variable, rescanning only when it is popped',
       ],
       answer: 0,
       explanation:
@@ -149,14 +149,14 @@ export const patternsLinked: Deck = {
       type: 'mcq',
       prompt: 'When does a linked list actually beat a Python list?',
       choices: [
-        'Frequent insertions/deletions at known positions mid-sequence (given a node reference). O(1) rewiring vs O(n) shifting',
-        'Random access by index, since node hops avoid the bounds checks a Python list pays per lookup',
+        'Frequent inserts/deletes mid-sequence given a node reference: O(1) rewiring',
+        'Random access by index: node hops skip Python’s bounds checks',
         'Iteration speed: pointer chasing skips re-reading the array header on each step',
-        'Memory usage per element: nodes avoid the over-allocated slack a Python list reserves, so linked nodes are more compact overall',
+        'Memory per element: nodes avoid the over-allocated slack lists reserve',
       ],
       answer: 0,
       explanation:
-        'Honest framing: arrays win most real workloads (cache locality, O(1) indexing); linked lists win interview problems and LRU internals. Saying that tradeoff plainly reads as experience.',
+        'Rewiring beats the O(n) shifting an array needs. Honest framing: arrays win most real workloads (cache locality, O(1) indexing); linked lists win interview problems and LRU internals. Saying that tradeoff plainly reads as experience.',
     },
   ],
 };

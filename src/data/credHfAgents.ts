@@ -19,10 +19,10 @@ export const credHfAgents: Deck = {
       type: 'mcq',
       prompt: 'The core agent cycle taught in Unit 1?',
       choices: [
-        'Thought → Action → Observation, repeated until the goal (the ReAct pattern)',
-        'Train → Test → Deploy: each run fine-tunes the model on its own trajectory before acting again',
-        'Prompt → Response → Done: one completion, with the tools inlined into the system prompt as text',
-        'Map → Reduce → Aggregate',
+        'Thought → Action → Observation, looped until the goal (ReAct)',
+        'Train → Test → Deploy: each run fine-tunes on its own trajectory',
+        'Prompt → Response → Done: one completion with tools inlined as text',
+        'Map → Reduce → Aggregate, with each tool acting as one mapper stage',
       ],
       answer: 0,
       explanation:
@@ -33,10 +33,10 @@ export const credHfAgents: Deck = {
       type: 'mcq',
       prompt: 'What is GAIA, the final-challenge benchmark?',
       choices: [
-        'Real-world assistant tasks needing multi-step reasoning, web browsing, tool use, and file handling: easy for humans, hard for agents',
-        'A pure math-proof benchmark: models score near zero because formal verification rejects every natural-language reasoning step they produce',
-        'A latency benchmark for inference servers: agents are ranked purely by tokens per second on tool-calling workloads',
-        'A dataset of chess puzzles',
+        'Real-world assistant tasks: multi-step reasoning, browsing, tools, files',
+        'A math-proof benchmark where formal verification rejects LLM reasoning',
+        'A latency benchmark ranking inference servers by tokens per second',
+        'A chess-puzzle dataset where agents are graded on move quality against engines',
       ],
       answer: 0,
       explanation:
@@ -53,10 +53,10 @@ export const credHfAgents: Deck = {
       type: 'mcq',
       prompt: 'smolagents offers ToolCallingAgent and CodeAgent. The difference?',
       choices: [
-        'ToolCallingAgent emits JSON tool calls; CodeAgent writes Python snippets that call tools directly',
-        'ToolCallingAgent is multi-turn; CodeAgent writes one script up front and runs the whole task single-shot',
-        'CodeAgent only works with models fine-tuned on code, so most chat models must use ToolCallingAgent',
-        'They are aliases of the same class',
+        'ToolCallingAgent emits JSON calls; CodeAgent writes Python that calls tools',
+        'ToolCallingAgent is multi-turn; CodeAgent writes one script and runs it single-shot',
+        'CodeAgent requires a code-tuned model; chat models get ToolCallingAgent',
+        'Nothing: they are aliases of the same class kept for API compatibility',
       ],
       answer: 0,
       explanation:
@@ -77,10 +77,10 @@ export const credHfAgents: Deck = {
       type: 'mcq',
       prompt: 'LlamaIndex’s role in the course lineup?',
       choices: [
-        'Agents over your data: indexes, query engines, and workflows for retrieval-centric agents',
-        'The fastest general web-browsing agent: it crawls and scrapes live sites with no retrieval layer involved',
-        'A model-training framework: it fine-tunes embedding models on your documents before indexing them',
-        'A JavaScript-only alternative',
+        'Agents over your data: indexes, query engines, retrieval workflows',
+        'A web-browsing agent that crawls live sites with no retrieval layer',
+        'A training framework that fine-tunes embedding models on your docs',
+        'A JavaScript-only smolagents alternative for browser deployments',
       ],
       answer: 0,
       explanation:
@@ -91,10 +91,10 @@ export const credHfAgents: Deck = {
       type: 'mcq',
       prompt: 'Why does the course teach LangGraph for "production-ready" agents specifically?',
       choices: [
-        'Explicit graph control flow: typed state, conditional routing, and checkpointing beat a free-running loop for reliability',
-        'It is the only framework of the three that scales past one machine: graph nodes are scheduled across a GPU cluster automatically',
-        'LangGraph agents cannot hallucinate: every node output is validated against the typed state schema before it propagates',
-        'It requires no code',
+        'Explicit graph control flow: typed state, conditional routing, checkpoints',
+        'It alone scales past one machine, scheduling nodes across a GPU cluster',
+        'Its typed state schema validates node outputs, so agents cannot hallucinate',
+        'It is no-code: graphs are drawn in a visual editor instead of Python',
       ],
       answer: 0,
       explanation:
@@ -105,10 +105,10 @@ export const credHfAgents: Deck = {
       type: 'mcq',
       prompt: 'Agentic RAG (Unit 3) differs from plain RAG how?',
       choices: [
-        'The agent decides when and what to retrieve: reformulating queries, retrieving multiple times, mixing tools',
-        'It uses bigger embedding models so a single retrieval pass returns better chunks',
-        'It skips the vector store entirely: the agent reads the raw corpus through a long context window on every question',
-        'It only works on structured data',
+        'The agent decides when and what to retrieve, rewriting and repeating',
+        'Bigger embedding models make the single retrieval pass return better chunks',
+        'No vector store: the agent reads the raw corpus via long context',
+        'It only works on structured data with a schema the agent can query',
       ],
       answer: 0,
       explanation:
@@ -143,10 +143,10 @@ export const credHfAgents: Deck = {
       type: 'mcq',
       prompt: 'What does agent "working memory" contain, versus plain chat history?',
       choices: [
-        'The structured record of the current run: instructions, task, actions, tool calls and outputs, code results, observations, and errors, replayed as messages each step',
-        'Only the user and assistant turns',
-        'The model’s weights from fine-tuning',
-        'A vector store of all past conversations',
+        'The current run\'s structured record: task, tool calls, outputs, errors',
+        'Only the user and assistant turns, exactly as a chat app stores them',
+        'The model\'s weights, updated by fine-tuning after each completed run',
+        'A vector store holding every past conversation for later lookup',
       ],
       answer: 0,
       explanation:
@@ -157,10 +157,10 @@ export const credHfAgents: Deck = {
       type: 'mcq',
       prompt: 'Correct order for debugging an agent system that is failing?',
       choices: [
-        'Test the model alone, then one tool, then one agent task, then a small batch',
-        'Run the full benchmark and read the aggregate score',
-        'Add more tools until something works',
-        'Switch frameworks first',
+        'Model alone, then one tool, then one agent task, then a small batch',
+        'Run the full benchmark first and read the aggregate score for clues',
+        'Add more tools until one of them gets the failing tasks to pass',
+        'Switch frameworks first; most failures are framework-level bugs',
       ],
       answer: 0,
       explanation:
@@ -177,10 +177,10 @@ export const credHfAgents: Deck = {
       type: 'mcq',
       prompt: 'When should multi-agent orchestration, memory systems, or a heavier framework be added to an agent?',
       choices: [
-        'Only after the simple baseline demonstrably hits a limitation that specifically needs them',
-        'From the start, to future-proof the design',
-        'Whenever the benchmark score plateaus',
-        'When the framework releases a new version',
+        'Only after the baseline demonstrably hits a limitation needing them',
+        'From the start, so the design never needs a structural rewrite later',
+        'Whenever the benchmark score plateaus, regardless of the failure mode',
+        'When the framework ships a new version with those features built in',
       ],
       answer: 0,
       explanation:

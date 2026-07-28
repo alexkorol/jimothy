@@ -30,9 +30,9 @@ export const patternsStringsHash: Deck = {
       prompt: 'Group anagrams together: what is the hash key?',
       choices: [
         'The sorted word (or a 26-count tuple): all anagrams share it',
-        'The first letter',
-        'The word length combined with its first and last letters, unique per anagram set',
-        'Python’s built-in hash of the word: anagrams collide since they share characters',
+        'The first letter concatenated with the word length',
+        'The word length plus its first and last characters',
+        'The built-in hash() of the word, which anagrams share',
       ],
       answer: 0,
       explanation:
@@ -44,7 +44,7 @@ export const patternsStringsHash: Deck = {
       prompt: 'First non-repeating character in a string: the two-pass shape?',
       choices: [
         'Counter the string, then rescan for the first char with count 1',
-        'Nested loops comparing every pair',
+        'Nested loops comparing every pair of characters for repeats',
         'Sort the string, then return the first char whose neighbors differ',
         'Push chars on a stack, popping when a repeat arrives; the bottom is the answer',
       ],
@@ -63,8 +63,8 @@ export const patternsStringsHash: Deck = {
       type: 'mcq',
       prompt: 'Find all anagrams of pattern p in string s: the efficient frame?',
       choices: [
-        'Fixed-size sliding window with a running char count, updated incrementally per slide',
-        'Recount the full window at every position: the O(len(p)) cost per slide is already optimal',
+        'Fixed-size sliding window with a running char count',
+        'Recount the full window from scratch at every position',
         'Generate all permutations of p and search each',
         'Sort every window and compare it against sorted(p)',
       ],
@@ -94,7 +94,7 @@ export const patternsStringsHash: Deck = {
       prompt: 'Elements common to two lists, each listed once?',
       choices: [
         'set(a) & set(b)',
-        '[x for x in a if x in b]: already optimal',
+        '[x for x in a if x in b]',
         'sorted(a) == sorted(b)',
         'zip(a, b)',
       ],
@@ -107,10 +107,10 @@ export const patternsStringsHash: Deck = {
       type: 'mcq',
       prompt: 'Longest consecutive run (e.g. [100,4,200,1,3,2] → 4) in O(n): the key move?',
       choices: [
-        'Put all in a set; only start counting from numbers where n-1 is absent (run starts)',
-        'Sort first and scan adjacent pairs for runs: O(n log n) is provably optimal here',
-        'Put all in a set and count upward from every number: membership checks are O(1) anyway',
-        'Use a sliding window',
+        'Put all in a set; count up only from numbers where n-1 is absent',
+        'Sort first and scan adjacent pairs for runs: O(n log n) is optimal',
+        'Put all in a set and count upward from every single number',
+        'Use a two-pointer sliding window over the value range',
       ],
       answer: 0,
       explanation:
@@ -124,7 +124,7 @@ export const patternsStringsHash: Deck = {
         'Lists are mutable, hence unhashable: use a tuple key instead',
         'Dict keys must be strings or numbers: container keys are never allowed',
         'Two-element keys are not allowed: dict keys must be scalar values',
-        'It works fine',
+        'Nothing raises; the list is silently converted to a tuple key',
       ],
       answer: 0,
       explanation:

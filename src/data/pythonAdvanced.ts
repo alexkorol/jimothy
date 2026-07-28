@@ -52,9 +52,9 @@ export const pythonAdvanced: Deck = {
       code: 'g = (i for i in range(3))\nprint(list(g))\nprint(list(g))',
       choices: [
         '[]; the generator is exhausted',
-        '[0, 1, 2] again; list() restarts the generator from the top',
-        '[3, 4, 5]; the generator keeps counting where it left off',
-        'RuntimeError',
+        '[0, 1, 2] again; list() restarts it',
+        '[3, 4, 5]; it keeps counting onward',
+        'RuntimeError: generator already consumed',
       ],
       answer: 0,
       explanation:
@@ -66,9 +66,9 @@ export const pythonAdvanced: Deck = {
       prompt: 'What does the `@dataclass` decorator generate for you?',
       choices: [
         '__init__, __repr__, and __eq__',
-        'Only __init__; repr and equality still fall back to the object defaults',
-        'Database table mappings',
-        'JSON serialization methods (__json__ plus a from_json constructor)',
+        'Only __init__, not repr or equality',
+        'SQL table mappings for the class',
+        '__json__ and a from_json constructor',
       ],
       answer: 0,
       explanation:
@@ -97,9 +97,9 @@ export const pythonAdvanced: Deck = {
       code: 'while (chunk := f.read(8192)):\n    process(chunk)',
       choices: [
         'Assigns and returns the value inside an expression',
-        'Compares by identity, like the is operator, but usable inside expressions',
-        'Declares a constant',
-        'Creates a weak reference',
+        'Compares by identity, like the is operator',
+        'Declares a constant scoped to the loop',
+        'Creates a weak reference to the value',
       ],
       answer: 0,
       explanation:
@@ -129,7 +129,7 @@ export const pythonAdvanced: Deck = {
         'Memoizes results keyed by the arguments',
         'Limits how often the function can be called',
         'Runs the function in a background thread',
-        'Logs each call for debugging',
+        'Logs each call and its result for debugging',
       ],
       answer: 0,
       explanation:
@@ -141,10 +141,10 @@ export const pythonAdvanced: Deck = {
       prompt: 'What does the second call print?',
       code: 'def add(item, bucket=[]):\n    bucket.append(item)\n    return bucket\n\nadd(1)\nprint(add(2))',
       choices: [
-        '[1, 2]; the default list is created once and shared across calls',
-        '[2]; the default expression is re-evaluated on every call that omits the argument',
-        '[]; defaults are reset after every call',
-        'TypeError: mutable defaults are not allowed',
+        '[1, 2]; the default list is created once and shared',
+        '[2]; the default is re-evaluated on each call',
+        '[]; the default list is reset after every call',
+        'TypeError: mutable default arguments are not allowed',
       ],
       answer: 0,
       explanation:
@@ -163,9 +163,9 @@ export const pythonAdvanced: Deck = {
       type: 'mcq',
       prompt: 'Why put `@functools.wraps(fn)` on the wrapper inside a decorator?',
       choices: [
-        "It copies fn's __name__, __doc__, and other metadata onto the wrapper",
-        'It caches results of repeated calls',
-        'It is required: a decorator whose wrapper lacks wraps raises TypeError at decoration time',
+        "It copies fn's __name__, __doc__, and metadata to the wrapper",
+        'It caches the results of repeated calls to fn',
+        'It is required; omitting it raises TypeError at decoration time',
         'It prevents the decorator from being applied twice',
       ],
       answer: 0,

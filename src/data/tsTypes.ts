@@ -32,9 +32,9 @@ export const tsTypes: Deck = {
       prompt: 'const x: Cat | Dog. Before any narrowing, which members can you access on x?',
       choices: [
         'Only members that exist on every type in the union',
-        'All members of both Cat and Dog, since the value could turn out to be either one',
-        'None until you cast x to one of them',
-        'The members of whichever type is listed first',
+        'Every member of Cat plus every member of Dog',
+        'None until you cast x to one of the two types',
+        'The members of whichever type appears first in the union',
       ],
       answer: 0,
       explanation:
@@ -45,10 +45,10 @@ export const tsTypes: Deck = {
       type: 'mcq',
       prompt: "What does `as const` change about `const config = { retries: 3, mode: 'fast' } as const`?",
       choices: [
-        "Every property becomes readonly and keeps its literal type (3, 'fast') instead of widening",
-        'The object becomes deeply immutable at runtime, like a recursive Object.freeze applied at creation',
-        'The object is converted to a const enum',
-        'Nothing: const declarations already prevent widening inside objects',
+        "Every property becomes readonly and keeps its literal type (3, 'fast')",
+        'The object becomes deeply immutable at runtime, like a recursive Object.freeze',
+        'The compiler converts the object literal into a const enum',
+        'Nothing: const already prevents widening inside object literals',
       ],
       answer: 0,
       explanation:
@@ -59,8 +59,8 @@ export const tsTypes: Deck = {
       type: 'mcq',
       prompt: 'Model fetch state so that `data` is only reachable when the request succeeded. The right tool?',
       choices: [
-        'A discriminated union: one variant per state, each with a literal status tag',
-        'One interface with optional loading, data, and error fields, checked with truthiness before each use',
+        'A discriminated union: one tagged variant per state',
+        'One interface with optional loading, data, and error fields',
         'An enum for the status plus a class with nullable fields',
         'A boolean isLoading flag next to data: T | null',
       ],
@@ -95,10 +95,10 @@ export const tsTypes: Deck = {
       type: 'mcq',
       prompt: 'function get<T, K extends keyof T>(obj: T, key: K): T[K]. What does this signature guarantee?',
       choices: [
-        'key must be a real property name of obj, and the return type is that property\'s exact type',
-        'key can be any string at the call site, and the return type widens to the union of all property types',
-        'It only works when T is an interface, not a type alias',
-        'obj must be assignable to Record<string, unknown>',
+        'key must be a real property of obj; the result is that property\'s type',
+        'key can be any string; the return type widens to a union of all properties',
+        'It only works when T is declared as an interface, not a type alias',
+        'obj must first be assignable to Record<string, unknown>',
       ],
       answer: 0,
       explanation:
@@ -131,28 +131,28 @@ export const tsTypes: Deck = {
       type: 'mcq',
       prompt: 'What does strictNullChecks actually change?',
       choices: [
-        'null and undefined stop being assignable to every type; you must model and narrow them explicitly',
-        'The compiler injects runtime null checks into the emitted JS that throw the moment a null is dereferenced',
-        'The null type is banned from the codebase',
-        'All object properties become required',
+        'null and undefined stop being assignable to every type',
+        'The compiler injects runtime null checks into the emitted JS',
+        'The null type becomes a compile error anywhere it appears',
+        'Every object property becomes required instead of optional',
       ],
       answer: 0,
       explanation:
-        'Without it, string silently admits null and the checker misses the most common JS crash. Its partner flag noImplicitAny stops unannotated parameters from becoming any. "strict": true enables the whole family; new projects should never run without it.',
+        'Without it, string silently admits null and the checker misses the most common JS crash. With it on, you must model null explicitly and narrow before use. Its partner flag noImplicitAny stops unannotated parameters from becoming any. "strict": true enables the whole family; new projects should never run without it.',
     },
     {
       id: 'tst-enum-vs-union',
       type: 'mcq',
       prompt: "enum Status { Active = 'active' } vs type Status = 'active' | 'inactive'. Why do unions usually win?",
       choices: [
-        'Unions are erased at compile time, need no import at use sites, and match plain strings structurally',
-        'Enums cannot be narrowed by switch statements, so exhaustiveness checks with never only work on unions',
-        'Unions are faster than enums at runtime',
-        'Enums cannot hold string values',
+        'Unions erase at compile time and match plain strings structurally',
+        'Enums cannot be narrowed by switch, so exhaustiveness checks fail',
+        'Union member access is faster than enum member access at runtime',
+        'Enums accept only numeric member values, never strings',
       ],
       answer: 0,
       explanation:
-        'An enum emits a runtime object and behaves nominally: a raw "active" from JSON is not assignable to the enum without conversion, while the union accepts it directly at zero cost. Enums still earn their keep when you want a closed set whose member names can be renamed independently of their values.',
+        'An enum emits a runtime object and behaves nominally: a raw "active" from JSON is not assignable to the enum without conversion, while the union accepts it directly at zero cost and needs no import at use sites. Enums still earn their keep when you want a closed set whose member names can be renamed independently of their values.',
     },
     {
       id: 'tst-satisfies',

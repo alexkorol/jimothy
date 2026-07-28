@@ -29,14 +29,14 @@ export const sklearnWorkflow: Deck = {
       type: 'mcq',
       prompt: 'Why `scaler.transform(X_test)` and never `scaler.fit_transform(X_test)`?',
       choices: [
-        'Refitting on test learns test statistics: leakage, and train/test land in different spaces',
-        'fit_transform recomputes the statistics twice, so it is slower; the outputs are otherwise the same',
-        'Test sets cannot be transformed twice: fit_transform would scale already-scaled values',
-        'Both are equivalent',
+        'Refitting on test learns test statistics: that is leakage',
+        'fit_transform is just slower; the outputs are the same',
+        'fit_transform would rescale already-scaled test values',
+        'Both are equivalent whenever the scaler is deterministic',
       ],
       answer: 0,
       explanation:
-        'The single most common sklearn mistake. The scaler must apply the TRAINING mean/std to test data, exactly as production will apply them to unseen data.',
+        'The single most common sklearn mistake. The scaler must apply the TRAINING mean/std to test data, exactly as production will apply them to unseen data. Refitting also puts train and test in different feature spaces.',
     },
     {
       id: 'sk-pipeline',
@@ -53,10 +53,10 @@ export const sklearnWorkflow: Deck = {
       type: 'mcq',
       prompt: 'Numeric columns need scaling, categoricals need one-hot. The idiomatic tool?',
       choices: [
-        'ColumnTransformer: different transformers per column group, inside the Pipeline',
-        'Transform manually before splitting: scaling the full frame once keeps train and test consistent',
-        'Two separate models',
-        'Convert everything to strings so OneHotEncoder can process every column uniformly',
+        'ColumnTransformer: per-column-group transformers in the Pipeline',
+        'Transform the full frame manually before splitting',
+        'Two separate models, one per column type, averaged',
+        'Convert all columns to strings and one-hot everything',
       ],
       answer: 0,
       explanation:
@@ -77,10 +77,10 @@ export const sklearnWorkflow: Deck = {
       type: 'mcq',
       prompt: 'GridSearchCV(pipe, params, cv=5): what happens on .fit, and what do you use after?',
       choices: [
-        'Every param combo is CV-scored; best_estimator_ is refit on all training data: use that',
-        'It fits once with default params',
-        'Each combo is scored on the held-out test set, which is what the cv argument controls',
-        'It scores combos but only stores best_params_: you instantiate and refit the winner manually',
+        'Every combo is CV-scored; use the refit best_estimator_',
+        'It fits once with default params, ignoring the grid',
+        'Each combo is scored on the held-out test set via cv',
+        'It stores best_params_ only; you refit the winner manually',
       ],
       answer: 0,
       explanation:
@@ -91,10 +91,10 @@ export const sklearnWorkflow: Deck = {
       type: 'mcq',
       prompt: '`predict()` vs `predict_proba()`, and which one does threshold tuning need?',
       choices: [
-        'predict applies a fixed 0.5 cut; predict_proba gives scores so YOU choose the threshold',
-        'predict_proba returns regression-style continuous outputs, so threshold tuning belongs to regressors',
-        'predict is more accurate',
-        'They are identical for classifiers: both apply the same built-in cutoff you cannot change',
+        'predict uses a fixed 0.5 cut; predict_proba lets you set the threshold',
+        'predict_proba is for regressors: continuous outputs only',
+        'predict gives more accurate labels at the default threshold',
+        'They are identical: both apply a fixed built-in cutoff',
       ],
       answer: 0,
       explanation:
@@ -115,10 +115,10 @@ export const sklearnWorkflow: Deck = {
       type: 'mcq',
       prompt: 'Why set random_state everywhere?',
       choices: [
-        'Reproducibility: splits, shuffles, and stochastic models give identical results across runs',
-        'It improves accuracy: a fixed seed lets stochastic optimizers converge to the same better minimum',
-        'sklearn refuses to fit stochastic estimators without it and raises a ValueError',
-        'It seeds the GPU',
+        'Reproducibility: identical splits and fits across runs',
+        'Accuracy: a fixed seed converges to a better minimum',
+        'sklearn raises ValueError on stochastic fits without it',
+        'It seeds the GPU kernels sklearn dispatches to',
       ],
       answer: 0,
       explanation:
@@ -129,28 +129,28 @@ export const sklearnWorkflow: Deck = {
       type: 'mcq',
       prompt: 'The one-line baseline model?',
       choices: [
-        'DummyClassifier(strategy="most_frequent"): the floor every real model must beat',
-        'LinearRegression on the class labels, rounded to the nearest integer class',
-        'A random forest with defaults: strong out of the box, so it doubles as the baseline',
-        'There is no baseline estimator',
+        'DummyClassifier(strategy="most_frequent")',
+        'LinearRegression on the labels, rounded to classes',
+        'A random forest with default hyperparameters',
+        'There is no baseline estimator; write one by hand',
       ],
       answer: 0,
       explanation:
-        'sklearn ships the dumb baseline as a first-class estimator precisely because skipping it is so tempting. DummyRegressor(strategy="mean") for regression.',
+        'sklearn ships the dumb baseline as a first-class estimator precisely because skipping it is so tempting: it is the floor every real model must beat. DummyRegressor(strategy="mean") for regression.',
     },
     {
       id: 'sk-persist',
       type: 'mcq',
       prompt: 'Shipping the trained pipeline to production: the standard move?',
       choices: [
-        'joblib.dump(pipe, "model.joblib"): persist the WHOLE pipeline, preprocessing included',
-        'Save only the model weights and rewrite preprocessing in the API layer: smaller artifact, cleaner serving code',
-        'Pickle just the scaler',
-        'Retrain on every request',
+        'joblib.dump the WHOLE pipeline, preprocessing included',
+        'Save weights only; rewrite preprocessing in the API layer',
+        'Pickle just the scaler; the model rebuilds from config',
+        'Retrain from stored data on every incoming request',
       ],
       answer: 0,
       explanation:
-        'Serializing the full pipeline guarantees serving applies byte-identical preprocessing. Re-implementing transforms in the API layer is where train/serve skew is born.',
+        'joblib.dump(pipe, "model.joblib") serializes the full pipeline, guaranteeing serving applies byte-identical preprocessing. Re-implementing transforms in the API layer is where train/serve skew is born.',
     },
     {
       id: 'sk-randomized-search',
@@ -163,10 +163,10 @@ export const sklearnWorkflow: Deck = {
       type: 'mcq',
       prompt: '1% positives. Cheapest first move in sklearn, and the trap if you resample instead?',
       choices: [
-        'class_weight="balanced" on the estimator; if you oversample, do it inside the CV folds (train portion only), never before splitting',
-        'Oversample the whole dataset before train_test_split so both halves are balanced and every metric gets computed on a perfectly even class mix',
-        'Drop negatives until classes are even, then evaluate on the balanced set so precision and recall are directly comparable',
-        'Switch scoring to accuracy so the imbalance stops mattering',
+        'class_weight="balanced"; oversample only inside CV folds',
+        'Oversample everything first, then split into even halves',
+        'Drop negatives until even, then evaluate on that balanced set',
+        'Switch scoring to accuracy so imbalance stops mattering',
       ],
       answer: 0,
       explanation:
@@ -183,14 +183,14 @@ export const sklearnWorkflow: Deck = {
       type: 'mcq',
       prompt: 'Which models actually need feature scaling?',
       choices: [
-        'Distance and gradient based ones (KNN, SVM, PCA, regularized linear models, neural nets); tree ensembles do not care',
-        'All models: every sklearn estimator assumes standardized input, and unscaled features break the fit numerically or stall convergence',
-        'Only neural networks',
-        'Tree ensembles most of all: split thresholds only compare correctly when features share one scale',
+        'Distance/gradient models (KNN, SVM, neural nets); trees do not care',
+        'All models: unscaled features stall or break every estimator',
+        'Only neural networks; everything else is scale invariant',
+        'Tree ensembles most of all: splits need one shared scale',
       ],
       answer: 0,
       explanation:
-        'Trees split on one feature at a time, so any monotonic rescaling leaves the splits unchanged. Anything computing distances, dot products, or shared penalties across features needs scaling, or the largest-unit feature silently dominates. L1/L2 regularization also penalizes unscaled coefficients unevenly.',
+        'Trees split on one feature at a time, so any monotonic rescaling leaves the splits unchanged. Anything computing distances, dot products, or shared penalties across features (KNN, SVM, PCA, regularized linear models, neural nets) needs scaling, or the largest-unit feature silently dominates. L1/L2 regularization also penalizes unscaled coefficients unevenly.',
     },
     {
       id: 'sk-joblib-version',
@@ -205,10 +205,10 @@ export const sklearnWorkflow: Deck = {
       type: 'mcq',
       prompt: 'Why prefer permutation_importance over a forest’s feature_importances_?',
       choices: [
-        'Impurity importance inflates high-cardinality features and reflects only training fit; permutation measures real score drop, ideally on held-out data',
-        'feature_importances_ is deprecated and scheduled for removal in a future sklearn release',
-        'Permutation importance is faster to compute: it reuses the fitted model instead of building new trees, so it scales better with many features and repeats',
-        'They always rank features identically',
+        'It measures real score drop; impurity inflates high-cardinality features',
+        'feature_importances_ is deprecated and slated for removal',
+        'It is faster: it reuses the fitted model instead of new trees',
+        'Nothing: the two always rank features identically anyway',
       ],
       answer: 0,
       explanation:

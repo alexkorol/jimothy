@@ -60,7 +60,7 @@ export const dsaInterview: Deck = {
       id: 'dsa-quicksort',
       type: 'mcq',
       prompt: 'Average-case time complexity of quicksort?',
-      choices: ['O(n log n)', 'O(n²), same as its worst case', 'O(n)', 'O(log n), the depth of the recursion tree'],
+      choices: ['O(n log n)', 'O(n²)', 'O(n)', 'O(log n)'],
       answer: 0,
       explanation:
         'Average O(n log n); worst case O(n²) on adversarial pivots (already-sorted input with naive pivot choice). Randomized pivots make the worst case vanishingly unlikely.',
@@ -120,10 +120,10 @@ export const dsaInterview: Deck = {
       type: 'mcq',
       prompt: 'Find the FIRST label that appears a second time in a stream. Cleanest approach?',
       choices: [
-        'A seen-set: return the label the moment membership check hits, else add and continue',
-        'Count all occurrences in a dict in one pass, then rescan the stream for the first label whose count is ≥ 2',
-        'Sort the list and scan for adjacent duplicates',
-        'Nested loops comparing every pair',
+        'A seen-set: return the label when the membership check hits',
+        'Count occurrences in a dict, then rescan for the first count ≥ 2',
+        'Sort the list, then scan it for adjacent duplicate labels',
+        'Nested loops comparing every pair of labels for equality',
       ],
       answer: 0,
       explanation:
@@ -192,7 +192,7 @@ export const dsaInterview: Deck = {
       id: 'dsa-sorted-info',
       type: 'flash',
       front: 'Why does sorted data unlock two pointers and binary search? State the underlying principle.',
-      back: 'Sorted data GIVES you information: one comparison now eliminates many candidates. Two pointers: if the pair sum is too small the left value can pair with nothing smaller, so move left; too large, move right — O(n) instead of O(n²) over pairs. Binary search: one comparison safely discards half the space, and it works on any ordered search space, not just arrays. General principle: exploit structure instead of brute-forcing; an O(n log n) sort often pays for itself by enabling these.',
+      back: 'Sorted data GIVES you information: one comparison now eliminates many candidates. Two pointers: if the pair sum is too small the left value can pair with nothing smaller, so move left; too large, move right: O(n) instead of O(n²) over pairs. Binary search: one comparison safely discards half the space, and it works on any ordered search space, not just arrays. General principle: exploit structure instead of brute-forcing; an O(n log n) sort often pays for itself by enabling these.',
     },
     {
       id: 'dsa-memo',

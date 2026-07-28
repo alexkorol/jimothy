@@ -29,10 +29,10 @@ export const llmTransformers: Deck = {
       type: 'mcq',
       prompt: 'Why divide by √d_k in attention?',
       choices: [
-        'Large dot products would saturate softmax into near one-hot, killing gradients',
-        'To keep the attention matrix well-conditioned for the inverse taken in the backward pass',
-        'To normalize the value vectors to unit length so heads concatenate on a common scale',
-        'To halve the memory usage',
+        'Large dot products saturate softmax into near one-hot, killing gradients',
+        'To keep the attention matrix well-conditioned for the backward pass',
+        'To normalize value vectors so heads concatenate on a common scale',
+        'To halve memory: attention scores then fit half-precision without overflow',
       ],
       answer: 0,
       explanation:
@@ -44,9 +44,9 @@ export const llmTransformers: Deck = {
       prompt: 'Why multiple attention heads instead of one big one?',
       choices: [
         'Each head can learn a different relationship type in its own subspace',
-        'More heads reduce total parameter count: splitting d_model across heads shrinks the projections',
-        'Softmax only works up to 64 dimensions, so attention must be computed in chunks',
-        'They exist purely for GPU parallelism',
+        'More heads cut parameter count: splitting d_model shrinks the projections',
+        'Softmax saturates past 64 dimensions, so scores must be computed in chunks',
+        'They exist purely so the score matrix shards evenly across GPU cores',
       ],
       answer: 0,
       explanation:
@@ -63,10 +63,10 @@ export const llmTransformers: Deck = {
       type: 'mcq',
       prompt: 'The causal mask in a decoder-only LLM exists so that…',
       choices: [
-        'Each position can only attend to earlier positions, no peeking at the future it must predict',
-        'Attention runs faster on GPUs: masking zeroes half the score matrix, so those entries are skipped',
-        'The model cannot see padding tokens: the triangular mask is how batched sequences of different lengths ignore padding',
-        'Beam search stays deterministic',
+        'Each position attends only to earlier positions, never the future it predicts',
+        'Attention runs faster on GPUs: masked entries are skipped, halving the score matrix',
+        'Batched sequences of different lengths need it to ignore padding tokens',
+        'Beam search stays deterministic across candidate beams during decoding',
       ],
       answer: 0,
       explanation:
@@ -84,9 +84,9 @@ export const llmTransformers: Deck = {
       prompt: 'Why do LLMs stumble on "how many r’s are in strawberry?"',
       choices: [
         'They see BPE tokens, not letters: "strawberry" may be 2–3 opaque chunks',
-        'They cannot count: counting is not differentiable, so gradient descent never teaches it',
-        'The training data lacks fruit',
-        'Attention weights scale with word length, so short words get too little attention to inspect',
+        'They cannot count: counting is not differentiable, so it is never learned',
+        'The training data underrepresents fruit words, so spelling them fails',
+        'Attention weight scales with word length, starving short words of focus',
       ],
       answer: 0,
       explanation:
@@ -103,10 +103,10 @@ export const llmTransformers: Deck = {
       type: 'mcq',
       prompt: 'Temperature 0 vs temperature 1 at sampling time?',
       choices: [
-        'T=0 always picks the top token (near-deterministic); T=1 samples the full distribution',
-        'T=0 disables the model’s safety filters, since alignment tuning only applies to sampled decoding',
-        'T=1 doubles response length',
-        'Temperature scales the weight matrices before the forward pass, trading determinism for creativity',
+        'T=0 picks the top token each step; T=1 samples the full distribution',
+        'T=0 disables safety filters, since alignment only applies to sampling',
+        'T=1 doubles response length by flattening end-of-sequence probability',
+        'Temperature rescales the weight matrices before the forward pass',
       ],
       answer: 0,
       explanation:
@@ -145,9 +145,9 @@ export const llmTransformers: Deck = {
       prompt: 'LoRA fine-tunes a large model by…',
       choices: [
         'Freezing base weights and training tiny low-rank matrices added to them',
-        'Retraining only the embedding table, since task knowledge lives in the token representations',
-        'Distilling the base model into a smaller student, then fine-tuning the student on the task',
-        'Pruning inactive neurons then retraining',
+        'Retraining only the embedding table, where task knowledge is stored',
+        'Distilling the base into a smaller student, then tuning the student',
+        'Pruning inactive neurons away, then retraining the surviving smaller network',
       ],
       answer: 0,
       explanation:
@@ -165,9 +165,9 @@ export const llmTransformers: Deck = {
       prompt: 'Root cause of hallucination in LLMs?',
       choices: [
         'The objective rewards plausible continuations, not verified truth',
-        'Insufficient GPU memory at inference: evicted KV-cache entries force the model to guess dropped context',
-        'Bugs in the attention implementation: precision loss in long contexts misroutes attention heads',
-        'Adversarial users',
+        'KV-cache evictions at inference force the model to guess dropped context',
+        'Precision loss in long contexts misroutes attention to the wrong facts',
+        'Adversarial users seeding the training corpus with fabricated claims',
       ],
       answer: 0,
       explanation:

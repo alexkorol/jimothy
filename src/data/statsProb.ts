@@ -13,10 +13,10 @@ export const statsProb: Deck = {
       type: 'mcq',
       prompt: 'Income data with a few billionaires, which center to report?',
       choices: [
-        'Median: robust to the skew; the mean gets dragged upward',
-        'Mean: it uses every data point, so it is strictly more informative than the median for any distribution',
-        'Mode',
-        'Midrange (max+min)/2',
+        'Median: robust to skew; the mean gets dragged upward',
+        'Mean: it uses every point, so it is more informative',
+        'Mode: the most common value is the typical income',
+        'Midrange (max+min)/2: it balances the two extremes',
       ],
       answer: 0,
       explanation:
@@ -65,10 +65,10 @@ export const statsProb: Deck = {
       type: 'mcq',
       prompt: 'Two fair coin flips. P(both heads)? And what assumption did you just use?',
       choices: [
-        '0.25: multiplied because the flips are independent',
-        '0.5: probabilities add',
-        '0.25: probabilities of two events always multiply, whether or not the events are independent',
-        '0.75',
+        '0.25: multiply because the flips are independent',
+        '0.5: the probabilities of the flips add together',
+        '0.25: probabilities always multiply, independent or not',
+        '0.75: one minus the both-tails probability of 0.25',
       ],
       answer: 0,
       explanation:
@@ -79,10 +79,10 @@ export const statsProb: Deck = {
       type: 'mcq',
       prompt: 'What a p-value of 0.03 actually means?',
       choices: [
-        'If the null hypothesis were true, data this extreme would occur 3% of the time',
-        'There is a 3% probability that the null hypothesis is true, given the data you observed',
-        'The effect size is 3%',
-        'A replication of the experiment would find a significant effect 97% of the time',
+        'If the null were true, data this extreme would occur 3% of the time',
+        'There is a 3% chance the null hypothesis is true, given the data',
+        'The measured effect size is 3% of the outcome scale',
+        'A replication would find a significant effect 97% of the time',
       ],
       answer: 0,
       explanation:
@@ -100,9 +100,9 @@ export const statsProb: Deck = {
       prompt: 'Ice cream sales correlate with drownings. The best explanation?',
       choices: [
         'A confounder: summer drives both; correlation ≠ causation',
-        'Ice cream causes drowning: swimming on a full stomach leads to cramps',
-        'Coincidence, always',
-        'Reverse causality: news coverage of drownings drives people to buy comfort ice cream',
+        'Ice cream causes cramps while swimming, hence drownings',
+        'Coincidence: strong correlations routinely arise by chance',
+        'Reverse causality: drowning news drives comfort ice cream sales',
       ],
       answer: 0,
       explanation:
@@ -114,9 +114,9 @@ export const statsProb: Deck = {
       prompt: 'Pearson r = 0 between X and Y. Can they still be strongly related?',
       choices: [
         'Yes. Pearson only measures LINEAR association; Y = X² gives r ≈ 0',
-        'No: r = 0 implies X and Y are statistically independent, so no relationship of any kind exists',
-        'Only if n is small',
-        'Only for categorical data',
+        'No: r = 0 means X and Y are statistically independent',
+        'Only if n is small enough for sampling noise to hide it',
+        'Only if X and Y are categorical rather than numeric',
       ],
       answer: 0,
       explanation:
@@ -127,10 +127,10 @@ export const statsProb: Deck = {
       type: 'mcq',
       prompt: 'A lottery ticket costs $2, pays $500 with probability 0.001. Expected value of buying?',
       choices: [
-        '−$1.50. EV = 0.001 × 500 − 2 = −1.5',
-        '+$0.50: EV = 0.001 × 500; the ticket price is a sunk cost and stays out of the calculation',
+        '−$1.50. EV = (0.001 × 500) − 2 = 0.5 − 2 = −1.5',
+        '+$0.50: the ticket price is sunk, so EV = 0.001 × 500',
         '$498: the $500 prize minus the $2 ticket price',
-        'Cannot be computed without knowing how many tickets are sold',
+        'Cannot be computed without the number of tickets sold',
       ],
       answer: 0,
       explanation:
@@ -141,10 +141,10 @@ export const statsProb: Deck = {
       type: 'mcq',
       prompt: 'Surveying app-store reviewers to estimate user satisfaction: the flaw?',
       choices: [
-        'Selection bias: reviewers are self-selected extremes, not representative users',
-        'Sample size: review counts are too small for significance, so collect more reviews before inferring anything',
-        'Reviews are text, so unusable',
-        'No flaw: reviewers are real users, so the sample is drawn from the population of interest',
+        'Selection bias: reviewers are self-selected extremes',
+        'Sample size: too few reviews for statistical significance',
+        'Reviews are free text, so they cannot be quantified',
+        'No flaw: reviewers are real users of the actual app',
       ],
       answer: 0,
       explanation:
@@ -162,9 +162,9 @@ export const statsProb: Deck = {
       prompt: 'Number of support tickets arriving per hour is best modeled by…',
       choices: [
         'Poisson: counts of independent events in a fixed window',
-        'Normal: the CLT guarantees hourly counts are normally distributed',
-        'Uniform',
-        'Binomial with n = 60: one Bernoulli trial per minute, success meaning a ticket arrived',
+        'Normal: the CLT forces hourly counts to be normal',
+        'Uniform: each hour is equally likely to get any count',
+        'Binomial with n = 60: one Bernoulli trial per minute',
       ],
       answer: 0,
       explanation:
@@ -175,10 +175,10 @@ export const statsProb: Deck = {
       type: 'mcq',
       prompt: 'You average the predictions of 10 diverse models. What happens statistically?',
       choices: [
-        'Variance drops (errors partially cancel) while bias stays: the statistical soul of ensembling',
-        'Bias drops: combining models lets them correct each other\'s systematic errors, at the cost of some extra variance',
-        'Both rise',
-        'Nothing changes',
+        'Variance drops (errors partially cancel); bias stays put',
+        'Bias drops: the models correct each other\'s systematic errors',
+        'Both bias and variance rise with the extra model count',
+        'Nothing changes: averaging preserves both error terms',
       ],
       answer: 0,
       explanation:

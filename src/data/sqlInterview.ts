@@ -13,10 +13,10 @@ export const sqlInterview: Deck = {
       type: 'mcq',
       prompt: '`INNER JOIN` vs `LEFT JOIN`: the actual difference?',
       choices: [
-        'LEFT keeps unmatched left-table rows with NULLs; INNER drops them',
-        'LEFT is faster because the optimizer only has to scan the left table once',
-        'INNER can chain across many tables; LEFT is limited to exactly two',
-        'They differ only in column order',
+        'LEFT keeps unmatched left rows with NULLs; INNER drops them',
+        'LEFT is faster: the left table is scanned only once',
+        'INNER can chain many tables; LEFT allows only two',
+        'They differ only in the output column ordering',
       ],
       answer: 0,
       explanation:
@@ -37,10 +37,10 @@ export const sqlInterview: Deck = {
       type: 'mcq',
       prompt: 'Filter to cities with more than 100 users. `WHERE` or `HAVING`?',
       choices: [
-        'HAVING: it filters after aggregation; WHERE runs before groups exist',
-        'WHERE: it can use the index on the aggregated column, so it is always more efficient',
+        'HAVING: it filters after aggregation; WHERE runs first',
+        'WHERE: it can use an index on the column, so it is faster',
         'Either works: the optimizer rewrites one into the other',
-        'Neither; you need a second query',
+        'Neither; you need a second query over a temp table',
       ],
       answer: 0,
       explanation:
@@ -76,9 +76,9 @@ export const sqlInterview: Deck = {
       prompt: 'Why does `WHERE email = NULL` return nothing, ever?',
       choices: [
         'NULL compares as unknown: use IS NULL / IS NOT NULL',
-        "NULL must be quoted: WHERE email = 'NULL' matches the missing values",
+        "NULL must be quoted: WHERE email = 'NULL' would match",
         'It should be == instead of =: a single = is assignment in SQL',
-        'The column needs an index first',
+        'The column needs an index before equality works',
       ],
       answer: 0,
       explanation:
@@ -96,9 +96,9 @@ export const sqlInterview: Deck = {
       prompt: 'Keep one row per email (the lowest id), delete the rest. The standard pattern?',
       choices: [
         'ROW_NUMBER() OVER (PARTITION BY email ORDER BY id), delete rn > 1',
-        'SELECT DISTINCT into a temp table, truncate the original, then re-insert the distinct rows',
+        'SELECT DISTINCT into a temp table, truncate, re-insert',
         'GROUP BY email, which collapses the duplicate rows in place',
-        'DELETE with LIMIT 1 in a loop',
+        'DELETE with LIMIT 1 in a loop until no duplicates remain',
       ],
       answer: 0,
       explanation:
@@ -109,10 +109,10 @@ export const sqlInterview: Deck = {
       type: 'mcq',
       prompt: 'What does adding an index to a column actually trade?',
       choices: [
-        'Faster reads on that column for slower writes and extra storage',
-        'Faster reads and writes: the B-tree keeps the rows pre-sorted for both operations',
-        'Compressed storage: the index replaces column values with shorter pointers',
-        'Enforced uniqueness',
+        'Faster reads for slower writes and extra storage',
+        'Faster reads and writes: the B-tree keeps rows pre-sorted',
+        'Compressed storage: values become shorter pointers',
+        'Enforced uniqueness on the indexed column values',
       ],
       answer: 0,
       explanation:
@@ -123,10 +123,10 @@ export const sqlInterview: Deck = {
       type: 'mcq',
       prompt: '`UNION` vs `UNION ALL`?',
       choices: [
-        'UNION deduplicates (and pays a sort for it); UNION ALL keeps everything and is faster',
-        'UNION ALL performs an implicit join on matching column names before appending the row sets',
+        'UNION dedupes (paying a sort); UNION ALL keeps everything',
+        'UNION ALL performs an implicit join on matching column names',
         'UNION works across databases, UNION ALL does not',
-        'No difference in modern SQL',
+        'No difference remains in modern SQL dialects',
       ],
       answer: 0,
       explanation:

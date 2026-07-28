@@ -27,9 +27,9 @@ export const sysFundamentals: Deck = {
       prompt: 'Which of these is a NON-functional requirement?',
       choices: [
         '99.9% availability with p99 latency under 200 ms',
-        'Users can follow other users and see their posts in a chronological feed',
-        'Posts support image attachments up to 10 MB with server-side resizing',
-        'Admins can delete any post',
+        'Users can follow others and see a chronological feed',
+        'Posts support image attachments up to 10 MB',
+        'Admins can delete any post from any user',
       ],
       answer: 0,
       explanation:
@@ -40,9 +40,9 @@ export const sysFundamentals: Deck = {
       type: 'mcq',
       prompt: 'Why ask for the read/write ratio before designing anything?',
       choices: [
-        'It decides the architecture: read-heavy favors caching and replicas, write-heavy favors queues and partitioning',
+        'It decides the architecture: caching and replicas vs queues and partitioning',
         'It determines the choice of programming language and framework for the service tier',
-        'It mainly sets the hardware budget: reads and writes are priced differently, so the ratio feeds cost estimates, not architecture',
+        'It mainly sets the hardware budget, since reads and writes are priced differently',
         'It only matters for SQL databases, since NoSQL stores handle both patterns identically',
       ],
       answer: 0,
@@ -65,9 +65,9 @@ export const sysFundamentals: Deck = {
       prompt: '1 million new 1 KB records per day. Roughly how much storage over 5 years?',
       choices: [
         '~2 TB: 1 GB/day, times 365, times 5, rounded up',
-        '~20 GB: 1M x 1 KB is roughly 10 MB/day, which stays small over 5 years',
-        '~200 TB: 1M x 1 KB comes to about 100 GB/day before compression',
-        '~2 PB',
+        '~20 GB: 1M x 1 KB is roughly 10 MB/day',
+        '~200 TB: 1M x 1 KB is about 100 GB/day',
+        '~2 PB: 1 TB/day accumulated over 5 years',
       ],
       answer: 0,
       explanation:
@@ -117,9 +117,9 @@ export const sysFundamentals: Deck = {
       type: 'mcq',
       prompt: 'A user updates their profile photo, refreshes, and briefly sees the old photo. What is happening, and what guarantee fixes it?',
       choices: [
-        'A stale read from a lagging replica; read-your-writes consistency (route the user\'s own reads to the primary) fixes it',
-        'Strong consistency working as intended: the model permits brief staleness inside the replication window after each write',
-        'A CAP violation with no possible fix',
+        'A stale replica read; read-your-writes consistency fixes it',
+        'Strong consistency as intended: brief staleness is allowed',
+        'A CAP theorem violation with no possible fix',
         'Purely browser caching, so no server-side fix exists',
       ],
       answer: 0,
@@ -145,10 +145,10 @@ export const sysFundamentals: Deck = {
       type: 'mcq',
       prompt: 'Vertical vs horizontal scaling: the core tradeoff?',
       choices: [
-        'Vertical is simple but hits a hardware ceiling and stays one failure domain; horizontal scales further but buys distributed-systems problems',
-        'Horizontal is strictly better at any size: commodity nodes beat big machines on price, and any workload can be partitioned across them cleanly',
+        'Vertical is simple but caps out; horizontal scales but adds distributed complexity',
+        'Horizontal is strictly better: commodity nodes always beat big machines',
         'Vertical is always cheaper: one large machine avoids paying for network gear and balancers',
-        'They are interchangeable, so the choice never matters',
+        'They are fully interchangeable, so the choice never matters in practice',
       ],
       answer: 0,
       explanation:
@@ -159,10 +159,10 @@ export const sysFundamentals: Deck = {
       type: 'mcq',
       prompt: 'What does a load balancer actually contribute to the design?',
       choices: [
-        'Spreads requests across servers, health-checks them, and routes around dead instances, so a fleet looks like one endpoint',
-        'Caches hot responses and terminates requests at the edge of the fleet, so backend servers rarely do repeated work for common paths',
-        'Holds session state centrally so the servers behind it can stay stateless',
-        'Makes each individual request complete faster',
+        'Spreads requests across servers and routes around dead instances',
+        'Caches hot responses at the edge so backend servers skip repeated work',
+        'Holds session state centrally so servers stay stateless',
+        'Makes each individual request finish faster end to end',
       ],
       answer: 0,
       explanation:

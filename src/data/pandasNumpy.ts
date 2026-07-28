@@ -14,9 +14,9 @@ export const pandasNumpy: Deck = {
       prompt: 'The difference between `df.loc` and `df.iloc`?',
       choices: [
         'loc selects by label, iloc by integer position',
-        'loc is for rows, iloc for columns',
-        'iloc is a faster alias of loc that skips the label lookup on the index',
-        'loc modifies the frame in place, while iloc always returns a defensive copy',
+        'loc selects rows and iloc selects columns',
+        'iloc is a faster alias of loc, skipping label lookup',
+        'loc edits in place, iloc returns a defensive copy',
       ],
       answer: 0,
       explanation:
@@ -39,9 +39,9 @@ export const pandasNumpy: Deck = {
       code: "df[df['age'] > 30]['salary'] = 0",
       choices: [
         'Chained indexing: the assignment may hit a temporary copy',
-        'Assigning a float into an int column, which forces a silent dtype upcast',
-        'Using loc instead of iloc',
-        'A version mismatch between pandas and NumPy',
+        'Assigning a float into an int column, forcing an upcast',
+        'Using loc where positional iloc indexing was required',
+        'A version mismatch between pandas and the NumPy backend',
       ],
       answer: 0,
       explanation:
@@ -113,10 +113,10 @@ export const pandasNumpy: Deck = {
       type: 'mcq',
       prompt: 'An integer column suddenly became float64 after loading. Most likely cause?',
       choices: [
-        'It contains NaN: classic NumPy has no integer NaN, so pandas upcasts',
-        'CSV files store every number as a float, so read_csv can only produce float columns',
-        'A pandas bug',
-        'The column exceeded int64 range',
+        'It contains NaN: NumPy has no integer NaN, so pandas upcasts',
+        'CSV stores every number as a float, so read_csv yields floats',
+        'A regression bug in the installed pandas version',
+        'One value overflowed the int64 range during parsing',
       ],
       answer: 0,
       explanation:
@@ -138,13 +138,13 @@ export const pandasNumpy: Deck = {
       prompt: 'Named aggregation: which call yields exactly the columns `avg_price` and `n` per city?',
       choices: [
         "df.groupby('city').agg(avg_price=('price', 'mean'), n=('price', 'count'))",
-        "df.groupby('city').agg({'price': ['mean', 'count']}).rename(columns={'mean': 'avg_price', 'count': 'n'})",
+        "df.groupby('city').agg({'price': ['mean', 'count']}).reset_index()",
         "df.groupby('city')['price'].mean().rename('avg_price')",
-        "df.agg(avg_price='mean', n='count')",
+        "df.agg(avg_price=('price', 'mean'), n=('price', 'count'))",
       ],
       answer: 0,
       explanation:
-        'The keyword=(column, func) form names output columns directly. The dict form also computes both but returns MultiIndex columns you then have to flatten; the rename version only produces one aggregate.',
+        'The keyword=(column, func) form names output columns directly. The dict form computes both but returns MultiIndex columns named mean/count (reset_index does not flatten them); the .mean() version yields only one aggregate; df.agg without groupby loses the per-city split.',
     },
     {
       id: 'pn-np-view',
@@ -152,10 +152,10 @@ export const pandasNumpy: Deck = {
       prompt: 'NumPy: after this runs, what happened to `a`?',
       code: 'b = a[2:5]\nb[0] = 99',
       choices: [
-        'a[2] is now 99: basic slicing returns a view sharing memory with a',
-        'a is unchanged: slicing allocates a fresh array, the same as list slicing in plain Python',
-        'ValueError: slices of an array are read-only',
-        'It depends on the dtype of a',
+        'a[2] is now 99: basic slices are views sharing memory',
+        'a is unchanged: slicing copies, just like Python lists',
+        'ValueError: slices of a NumPy array are read-only',
+        'It depends on the dtype and memory layout of a',
       ],
       answer: 0,
       explanation:

@@ -67,9 +67,9 @@ export const jsAsync: Deck = {
       code: "Promise.resolve(1)\n  .then((x) => x + 1)\n  .then((x) => { console.log(x); })\n  .then((x) => console.log(x));",
       choices: [
         '2 then undefined: the second .then never returns a value',
-        '2 then 2: the chain reuses the last resolved value when a callback returns nothing',
-        '2 then 3: each .then increments',
-        '1 then 2',
+        '2 then 2: the chain reuses the last resolved value',
+        '2 then 3: each .then increments the resolved value',
+        '1 then 2: the log runs before the increment applies',
       ],
       answer: 0,
       explanation:
@@ -81,9 +81,9 @@ export const jsAsync: Deck = {
       prompt: 'What does this log?',
       code: "Promise.reject(new Error('boom'))\n  .then(() => console.log('a'))\n  .catch((e) => console.log('b'))\n  .then(() => console.log('c'));",
       choices: [
-        "'b' then 'c': catch handles the error, and its normal return fulfills the next link",
-        "'b' only: once a promise chain rejects it stays rejected, so handlers after the catch never run",
-        "'a', 'b', then 'c': every handler runs",
+        "'b' then 'c': the catch handles the error and the chain resumes",
+        "'b' only: once a chain rejects it stays rejected for good",
+        "'a', 'b', then 'c': every handler in the chain runs once",
         "Uncaught error: .catch only handles throws inside .then callbacks",
       ],
       answer: 0,
@@ -96,10 +96,10 @@ export const jsAsync: Deck = {
       prompt: 'fetchData() returns a promise that rejects. Does the catch block run?',
       code: "async function load() {\n  try {\n    return fetchData(); // rejects later\n  } catch (e) {\n    console.log('caught');\n  }\n}",
       choices: [
-        'No: without await, the try block exits before the rejection happens, so the caller gets a rejected promise',
-        'Yes: try/catch covers everything lexically inside the block, including rejections that settle later',
-        'Yes: return and return await behave identically',
-        'No, and the rejection is swallowed forever: a promise returned from a try block detaches from all error handling',
+        'No: the try block exits before the rejection, so the caller gets the rejected promise',
+        'Yes: try/catch covers everything lexically inside the block, even later rejections',
+        'Yes: return and return await behave identically inside a try block',
+        'No, and the rejection is swallowed: the promise detaches from error handling',
       ],
       answer: 0,
       explanation:
@@ -124,10 +124,10 @@ export const jsAsync: Deck = {
       type: 'mcq',
       prompt: 'Promise.all([a, b, c]) and b rejects first. What happens?',
       choices: [
-        'It rejects immediately with b\'s reason; a and c keep running but their results are dropped',
-        'It waits for all three to settle, then rejects with an AggregateError collecting every failure reason',
-        'It fulfills with the two successful values',
-        'a and c are cancelled automatically: the combinator aborts pending inputs once the result is known',
+        'It rejects immediately with b\'s reason; a and c keep running',
+        'It waits for all three to settle, then rejects with an AggregateError',
+        'It fulfills with just the two successful values, a and c',
+        'a and c are cancelled automatically once the result is known',
       ],
       answer: 0,
       explanation:
@@ -139,10 +139,10 @@ export const jsAsync: Deck = {
       prompt: 'Three URLs, each taking about 300 ms. Roughly how long does this take, and why?',
       code: "const results = [];\nfor (const url of urls) {\n  const res = await fetch(url);\n  results.push(await res.json());\n}",
       choices: [
-        'About 900 ms: each await pauses the loop, so the requests run one after another',
-        'About 300 ms: fetch starts each request in the background, so the network work overlaps automatically',
-        'About 300 ms: the event loop parallelizes awaits',
-        'About 900 ms: JavaScript allows only one open connection',
+        'About 900 ms: each await pauses the loop, serializing the requests',
+        'About 300 ms: fetch runs the requests in the background, overlapping them',
+        'About 300 ms: the event loop parallelizes awaits across iterations',
+        'About 900 ms: JavaScript allows only one open connection at a time',
       ],
       answer: 0,
       explanation:
@@ -177,9 +177,9 @@ export const jsAsync: Deck = {
       type: 'mcq',
       prompt: 'A fetch call gets an HTTP 500 back. What does the fetch promise do?',
       choices: [
-        'Fulfills normally: fetch rejects only on network failure, so you must check response.ok yourself',
-        'Rejects with an HTTPError carrying the status code: any status outside the 200-299 range counts as failure',
-        'Rejects with the response body as the reason',
+        'Fulfills normally: fetch rejects only on network failure',
+        'Rejects with an HTTPError carrying the status code',
+        'Rejects with the response body text as the rejection reason',
         'Fulfills, but response.json() rejects because of the status',
       ],
       answer: 0,

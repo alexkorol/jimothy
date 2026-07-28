@@ -19,10 +19,10 @@ export const behSeniorSignals: Deck = {
       type: 'mcq',
       prompt: 'A mid-level and a senior candidate tell the same project as their "hardest project" story. What usually separates the senior telling?',
       choices: [
-        'Where it starts: the senior owned the problem before it was a defined project, and the impact extends past their own code',
-        'More technical depth: seniors are expected to go deeper on implementation details than a mid-level could, and interviewers grade that depth',
-        'A bigger team and a longer timeline, since scope is measured in headcount and duration',
-        'More polished, confident delivery',
+        'Where it starts: the senior owned the problem before it was a defined project',
+        'More technical depth: seniors go deeper on implementation, and that depth is graded',
+        'A bigger team and a longer timeline, since scope means headcount and duration',
+        'More polished, confident delivery honed over years of presenting work',
       ],
       answer: 0,
       explanation:
@@ -33,10 +33,10 @@ export const behSeniorSignals: Deck = {
       type: 'mcq',
       prompt: 'Which closing line to a behavioral story signals the widest scope?',
       choices: [
-        'The template we built became the default for every new service across the org',
-        'My code passed review with no major comments from the two most senior engineers on the team',
-        'We hit the deadline my manager set',
-        'I learned a lot about the framework, which shows the growth mindset interviewers screen for',
+        'The template we built became the default for new services across the org',
+        'My code passed review with no major comments from the most senior engineers',
+        'We hit the aggressive deadline my manager set for the quarter',
+        'I learned a lot about the framework and grew as an engineer',
       ],
       answer: 0,
       explanation:
@@ -53,10 +53,10 @@ export const behSeniorSignals: Deck = {
       type: 'mcq',
       prompt: 'You want three other teams to adopt a testing practice you have no authority to mandate. Which story do interviewers rate highest?',
       choices: [
-        'Proved it on your own team, published the results, made adoption cheap with templates and docs, and let one early-adopter team pull in the rest',
-        'Convinced your director to add it to every team\'s quarterly goals, since lasting change needs leadership backing and official mandates are what actually get compliance',
-        'Presented a polished all-hands slide deck making the data-driven case for why the practice is best',
-        'Rewrote the other teams\' tests yourself over a few weekends',
+        'Proved it on your team, made adoption cheap, and let an early adopter pull in the rest',
+        'Convinced your director to add it to every team\'s quarterly goals',
+        'Presented an all-hands deck making the data-driven case for the practice',
+        'Rewrote the other teams\' test suites yourself over a few weekends',
       ],
       answer: 0,
       explanation:
@@ -75,10 +75,10 @@ export const behSeniorSignals: Deck = {
       type: 'mcq',
       prompt: 'What are interviewers actually listening for in a mentorship story?',
       choices: [
-        'Multiplied impact: the person you grew now ships independently, and something you taught spread beyond them',
-        'That you are generous with your time and patient with juniors, since empathy is the core signal behavioral rounds screen for',
-        'The number of people you have formally mentored, since scale of mentorship maps directly to seniority',
-        'That you left detailed, thoughtful code review comments',
+        'Multiplied impact: the mentee ships independently, and what you taught spread',
+        'That you are generous with your time and patient with junior engineers',
+        'The headcount of people you have formally mentored, since scale maps to seniority',
+        'That you left detailed, thoughtful comments on the mentee\'s code reviews',
       ],
       answer: 0,
       explanation:
@@ -97,10 +97,10 @@ export const behSeniorSignals: Deck = {
       type: 'mcq',
       prompt: 'You chose Postgres over a trendy new datastore for a new service. Told well, what does that choice signal?',
       choices: [
-        'Deliberate judgment: known failure modes and team familiarity were weighed as features, and you can name what would flip the decision',
-        'Risk aversion in a good way: senior engineers always default to proven technology, because evaluating trendy tools is a junior habit that wastes team time',
-        'You lacked experience with the newer option',
-        'Nothing: technology choices are not behavioral signals',
+        'Deliberate judgment: known failure modes and familiarity weighed as features',
+        'Risk aversion in a good way: seniors should always default to proven technology',
+        'You lacked experience with the newer option and defaulted to what you knew',
+        'Nothing: technology choices are not behavioral signals, only design rounds grade them',
       ],
       answer: 0,
       explanation:
@@ -152,10 +152,10 @@ export const behSeniorSignals: Deck = {
       type: 'mcq',
       prompt: 'Two stakeholders each insist their feature is your top priority, and there is capacity for one. Best move?',
       choices: [
-        'Make the conflict visible: frame the tradeoff with shared criteria, bring a recommendation, and have the person who owns both priorities decide explicitly',
-        'Quietly interleave both so each stakeholder sees steady progress: keeping everyone feeling prioritized protects the relationships and buys time until capacity frees up',
-        'Do whichever stakeholder is more senior, since organizational rank is the practical tiebreaker',
-        'Escalate to your manager immediately: prioritization calls between stakeholders are above your pay grade, and making them yourself oversteps your role',
+        'Make the tradeoff visible, bring a recommendation, and have the owner of both decide',
+        'Quietly interleave both so each stakeholder sees steady progress',
+        'Do whichever stakeholder is more senior, since rank is the tiebreaker',
+        'Escalate to your manager immediately: this call is above your pay grade',
       ],
       answer: 0,
       explanation:

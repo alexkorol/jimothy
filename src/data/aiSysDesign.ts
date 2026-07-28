@@ -25,24 +25,24 @@ export const aiSysDesign: Deck = {
       type: 'mcq',
       prompt: 'The interviewer says "design an AI code reviewer." Your FIRST move?',
       choices: [
-        'Clarify scope: which languages, inline comments or summary, latency (pre-merge vs async), what does "good" mean?',
-        'Start drawing the standard RAG architecture immediately: interviewers award points for covering components quickly',
-        'Pick the model first, since context window and pricing constrain every downstream design decision',
-        'Estimate GPU count',
+        'Clarify scope: languages, output format, latency, what "good" means',
+        'Start drawing the standard RAG architecture immediately',
+        'Pick the model first: context window and pricing constrain the design',
+        'Estimate GPU count and infrastructure cost before anything else',
       ],
       answer: 0,
       explanation:
-        'Same discipline as restate-then-example in coding rounds. Two minutes of scoping visibly separates engineers from feature-listers.',
+        'Pre-merge vs async latency and inline comments vs summary output change the design entirely. Same discipline as restate-then-example in coding rounds. Two minutes of scoping visibly separates engineers from feature-listers.',
     },
     {
       id: 'sd-human-loop',
       type: 'mcq',
       prompt: 'Where does human-in-the-loop belong in an AI pipeline?',
       choices: [
-        'Wherever error cost exceeds review cost: with uncertainty routing deciding WHICH items humans see',
-        'Reviewing every output before release, since sampling can never catch rare high-severity failures',
-        'Nowhere; automation is the goal',
-        'Only during development: once shipped, the model is validated and human review just adds latency',
+        'Wherever error cost exceeds review cost, routed by uncertainty signals',
+        'Reviewing every output before release; sampling misses rare severe failures',
+        'Nowhere: full automation is the goal and review just adds latency',
+        'Only during development; a shipped model is already validated',
       ],
       answer: 0,
       explanation:
@@ -53,10 +53,10 @@ export const aiSysDesign: Deck = {
       type: 'mcq',
       prompt: 'The three cache layers of an LLM product, cheapest hit first?',
       choices: [
-        'Exact-response cache → semantic cache (similar-enough queries) → provider prompt-prefix cache',
-        'GPU KV cache → in-memory cache → disk cache, following the hardware memory hierarchy fastest first',
-        'A single semantic cache: exact-match and prefix caching are just subsets of similarity matching',
-        'Caching breaks LLM correctness',
+        'Exact-response cache → semantic cache → provider prefix cache',
+        'GPU KV cache → in-memory cache → disk cache, fastest hardware first',
+        'One semantic cache: exact and prefix matching are subsets of it',
+        'No cache at any layer: reuse breaks correctness for LLM output',
       ],
       answer: 0,
       explanation:
@@ -67,10 +67,10 @@ export const aiSysDesign: Deck = {
       type: 'mcq',
       prompt: 'The LLM provider has a 30-minute outage. Your product should…',
       choices: [
-        'Degrade gracefully per a designed ladder: secondary provider → smaller local model → cached/static responses → honest error',
-        'Show spinners until it returns',
-        'Retry every request with exponential backoff and jitter until the provider recovers, so no user interaction is ever dropped',
-        'Have no plan; outages are rare',
+        'Walk a designed ladder: second provider → local model → cache → error',
+        'Show a loading spinner on every request until the provider returns',
+        'Retry every request with exponential backoff and jitter until the provider recovers',
+        'Nothing special: provider outages are too rare to plan around',
       ],
       answer: 0,
       explanation:
@@ -81,10 +81,10 @@ export const aiSysDesign: Deck = {
       type: 'mcq',
       prompt: 'Chat product, 3-second perceived-latency budget. How do you spend it?',
       choices: [
-        'Retrieval + rerank ≤ 500ms, TTFT ≤ 1.5s via streaming: the user reads while decode continues',
-        'Generate the full response before rendering so users never see partial or revised text on screen',
-        'Skip retrieval: the model weights already contain the knowledge, and RAG only adds latency',
-        'Batch user requests each minute',
+        'Retrieval + rerank ≤ 500ms, then stream with TTFT ≤ 1.5s',
+        'Generate the full response before rendering any text',
+        'Skip retrieval; model weights already hold the knowledge',
+        'Batch requests each minute so the model serves fewer, larger calls',
       ],
       answer: 0,
       explanation:
@@ -108,10 +108,10 @@ export const aiSysDesign: Deck = {
       type: 'mcq',
       prompt: 'Back-of-envelope: 100k queries/day, ~2k input + 500 output tokens each, at $3/M in and $15/M out. Daily cost?',
       choices: [
-        '≈ $1,350/day: (0.2B × $3 + 0.05B × $15) per million',
-        '≈ $135/day: caching and batching cut the naive token bill about 90% in practice',
-        '≈ $13,500/day: retries and multi-turn context make 1M queries the real planning number',
-        'Impossible to estimate without the provider\'s batch discounts and cache hit rate',
+        '≈ $1,350/day: 200M input tokens at $3/M plus 50M output at $15/M',
+        '≈ $135/day: caching and batching cut the naive bill about 90%',
+        '≈ $13,500/day: retries and multi-turn context 10x the raw number',
+        'Not estimable without batch discounts and the cache hit rate',
       ],
       answer: 0,
       explanation:
@@ -122,10 +122,10 @@ export const aiSysDesign: Deck = {
       type: 'mcq',
       prompt: 'Your free AI endpoint is getting hammered by scripts. Defense stack?',
       choices: [
-        'Auth + per-user rate limits + spend caps + anomaly alerts + output size limits',
-        'Rely on the provider\'s rate limits: they already meter tokens per key upstream of your service',
-        'CAPTCHA on every request: if bots cannot reach the endpoint, no other limits are needed',
-        'Make the model refuse robots',
+        'Auth, per-user rate limits, spend caps, anomaly alerts, size limits',
+        'Rely on the provider\'s rate limits: they already meter each key upstream',
+        'CAPTCHA on every request so bots never reach the endpoint at all',
+        'A system prompt instructing the model to refuse automated callers',
       ],
       answer: 0,
       explanation:
@@ -142,10 +142,10 @@ export const aiSysDesign: Deck = {
       type: 'mcq',
       prompt: 'Day-2 operations: what do you alert on for an LLM feature?',
       choices: [
-        'Error/refusal rates, latency percentiles (p95 TTFT), token spend vs budget, eval-score drift on a canary set, feedback-rate changes',
-        'Standard infra metrics only (CPU, memory, 5xx rate, uptime): an LLM feature is a stateless service, so the usual dashboards cover it',
-        'Nothing; LLMs are stateless',
-        'Raw output length and tokens per response: quality regressions always show up as length anomalies',
+        'Refusal rates, p95 TTFT, token spend vs budget, canary eval drift, feedback rate',
+        'Standard infra metrics only: CPU, memory, 5xx rate, and uptime',
+        'Nothing: LLM calls are stateless, so there is no state to monitor',
+        'Output length and tokens per response; regressions show as length shifts',
       ],
       answer: 0,
       explanation:

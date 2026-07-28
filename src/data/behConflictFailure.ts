@@ -20,9 +20,9 @@ export const behConflictFailure: Deck = {
       prompt: 'The most common trap in conflict stories?',
       choices: [
         'Picking a story where the other person was simply wrong and you were right',
-        'Picking a conflict that was too small: only dramatic, high-stakes clashes prove you can handle real disagreement',
+        'Picking a conflict that was too small to prove you can handle real disagreement',
         'Admitting the conflict got tense, since any visible friction reads as unprofessional',
-        'Choosing a conflict with a manager instead of a peer',
+        'Choosing a conflict with a manager instead of a peer at your own level',
       ],
       answer: 0,
       explanation:
@@ -40,9 +40,9 @@ export const behConflictFailure: Deck = {
       prompt: 'You disagree with a senior engineer\'s design call. When is escalating (rather than letting go) the right move?',
       choices: [
         'When the decision is high-cost, hard to reverse, and your concern was heard but not addressed',
-        'Whenever you are confident you are right: staying silent when you know better is a failure of ownership',
-        'Never: seniority settles technical debates',
-        'Only after the decision has visibly failed, so you have concrete evidence instead of speculation',
+        'Whenever you are confident you are right: silence is a failure of ownership',
+        'Never: seniority settles technical debates, and overruling it burns capital',
+        'Only after the decision has visibly failed and you have concrete evidence',
       ],
       answer: 0,
       explanation:
@@ -59,9 +59,9 @@ export const behConflictFailure: Deck = {
       type: 'mcq',
       prompt: 'Which failure story scores zero with experienced interviewers?',
       choices: [
-        '"I worked so hard I burned out": a strength disguised as a failure, with no wrong decision to own',
-        'A project that shipped six weeks late because your estimate ignored a dependency another team had flagged',
-        'A bug you wrote that caused an outage',
+        '"I worked so hard I burned out": a strength disguised as a failure',
+        'A project that shipped six weeks late because your estimate ignored a flagged dependency',
+        'A bug you wrote that caused a customer-facing outage during peak traffic',
         'A hire you championed who did not work out and had to be managed out within the year',
       ],
       answer: 0,
@@ -106,10 +106,10 @@ export const behConflictFailure: Deck = {
       type: 'mcq',
       prompt: 'A stakeholder sets a deadline you believe is unrealistic. Strongest response?',
       choices: [
-        'Offer the tradeoff menu: reduced scope by that date, full scope later, or more people, and let them pick',
-        'Accept it to preserve the relationship, then manage expectations gradually as the slip becomes undeniable',
-        'Refuse flatly: bad estimates should not be rewarded',
-        'Agree, then cut testing to make the date: shipping on time is what stakeholders actually remember',
+        'Offer a menu: reduced scope by that date, full scope later, or more people',
+        'Accept it to preserve the relationship, then manage expectations as it slips',
+        'Refuse flatly: unrealistic estimates should not be rewarded with heroics',
+        'Agree, then cut testing to make the date: on time is what stakeholders remember',
       ],
       answer: 0,
       explanation:
@@ -121,9 +121,9 @@ export const behConflictFailure: Deck = {
       prompt: 'A teammate at your level is underperforming and the slack is landing on you. First move?',
       choices: [
         'Talk to them directly and privately; ask what is going on before diagnosing',
-        'Tell your manager first so the problem is documented and you are protected if it surfaces later',
-        'Silently absorb the extra work to protect the team',
-        'Raise it in retro so the whole team can weigh in transparently instead of you playing the bad guy',
+        'Tell your manager first so the problem is documented and you are protected',
+        'Silently absorb the extra work to protect the team\'s delivery',
+        'Raise it in retro so the whole team can weigh in transparently',
       ],
       answer: 0,
       explanation:
@@ -149,9 +149,9 @@ export const behConflictFailure: Deck = {
       prompt: 'Which answer pattern gets a conflict or failure story rejected outright?',
       choices: [
         'Badmouthing the other party: "my manager was incompetent, so..."',
-        'Admitting the conflict took weeks to resolve instead of framing it as settled in one conversation',
+        'Admitting the conflict took weeks to resolve rather than one conversation',
         'A failure whose cost was real money rather than a safe learning-experience story',
-        'Saying you escalated after direct conversation failed',
+        'Saying you escalated to a manager after the direct conversation failed',
       ],
       answer: 0,
       explanation:

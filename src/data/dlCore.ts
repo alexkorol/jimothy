@@ -20,9 +20,9 @@ export const dlCore: Deck = {
       prompt: 'Deep sigmoid networks fail to train because…',
       choices: [
         'Gradients vanish: each layer multiplies by sigmoid′ ≤ 0.25, shrinking exponentially',
-        'Sigmoids are too expensive to compute',
-        'The weights overflow to infinity: sigmoid activations compound multiplicatively through depth until values explode',
-        'Sigmoid outputs cannot be negative, so every gradient shares one sign and the loss surface has no descent direction',
+        'Sigmoids are too expensive: the exp() per unit dominates training compute',
+        'Weights overflow to infinity as sigmoid activations compound through depth',
+        'Sigmoid outputs are never negative, so every gradient shares one sign',
       ],
       answer: 0,
       explanation:
@@ -59,10 +59,10 @@ export const dlCore: Deck = {
       type: 'mcq',
       prompt: 'What does batch/layer normalization mainly buy you?',
       choices: [
-        'Stable, faster training: activations keep a consistent scale so larger learning rates work',
-        'A smaller model at inference: normalized activations compress into fewer bits, shrinking the stored weights',
-        'Guaranteed better test accuracy: normalization is a regularizer, so it always improves generalization',
-        'It replaces the need for an optimizer',
+        'Stable, faster training: consistent activation scale lets bigger LRs work',
+        'A smaller model at inference: normalized activations compress into fewer bits',
+        'Guaranteed better test accuracy: normalization always improves generalization',
+        'It replaces the optimizer: normalized layers converge without gradient steps',
       ],
       answer: 0,
       explanation:
@@ -74,9 +74,9 @@ export const dlCore: Deck = {
       prompt: 'What happens to dropout at inference time?',
       choices: [
         'It is turned off: all units active, with activations scaled to compensate',
-        'It keeps dropping units: the regularization must stay active or co-adaptation returns at test time',
+        'It keeps dropping units: co-adaptation would return the moment it stopped',
         'It only drops the output layer, since hidden layers are already trained',
-        'The dropout rate is doubled',
+        'The dropout rate is doubled to average over more subnetworks at test time',
       ],
       answer: 0,
       explanation:
@@ -108,10 +108,10 @@ export const dlCore: Deck = {
       type: 'mcq',
       prompt: 'Transformer training almost always starts with learning-rate warmup because…',
       choices: [
-        'Early steps have chaotic gradients; a big LR then can blow up training irrecoverably',
-        'GPUs need time to reach full clock speed',
-        'It reduces peak memory: small early steps keep optimizer state buffers from allocating at full size',
-        'Adam requires it mathematically: the moment estimates are undefined until the running averages fill',
+        'Early steps have chaotic gradients; a big LR then can blow up training',
+        'GPUs need thermal ramp time before they sustain full clock speed',
+        'It reduces peak memory: small early steps keep optimizer buffers small',
+        'Adam requires it mathematically: moment estimates are undefined at first',
       ],
       answer: 0,
       explanation:

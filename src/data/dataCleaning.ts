@@ -29,9 +29,9 @@ export const dataCleaning: Deck = {
       prompt: 'First thing you do with a dataset you have never seen?',
       choices: [
         'Profile it: df.info(), df.describe(), null counts, a few rows',
-        'Impute all missing values with the mean so later steps never hit a NaN',
-        'Drop every row containing a null: models require complete cases',
-        'Normalize all numeric columns',
+        'Impute all missing values with the mean right away',
+        'Drop every row with a null: models need complete cases',
+        'Normalize all numeric columns to zero mean, unit variance',
       ],
       answer: 0,
       explanation:
@@ -60,9 +60,9 @@ export const dataCleaning: Deck = {
         'In a salary survey, income is missing mostly for high earners. Dropping those rows would…',
       choices: [
         'Bias the data: this is MNAR, not missing at random',
-        'Be fine: complete-case analysis is unbiased whenever enough rows remain',
-        'Improve accuracy, since the model trains only on clean, fully observed rows',
-        'Only matter if more than half are missing',
+        'Be fine: complete-case analysis stays unbiased here',
+        'Improve accuracy: the model sees only fully observed rows',
+        'Only matter if more than half the rows were missing',
       ],
       answer: 0,
       explanation:
@@ -83,10 +83,10 @@ export const dataCleaning: Deck = {
       type: 'mcq',
       prompt: 'Why can duplicate rows be worse than they look?',
       choices: [
-        'They leak across train/test splits and inflate evaluation scores',
-        'They only waste memory and training time; the fitted model itself is unaffected',
-        'They cause syntax errors in pandas',
-        'They are impossible to detect',
+        'They leak across train/test splits and inflate scores',
+        'They only waste memory; the fitted model is unaffected',
+        'They make pandas operations raise duplicate-key errors',
+        'They cannot be detected once the data is loaded',
       ],
       answer: 0,
       explanation:
@@ -98,9 +98,9 @@ export const dataCleaning: Deck = {
       prompt: 'Which outlier rule is itself robust to extreme outliers?',
       choices: [
         'IQR rule: flag values beyond 1.5×IQR from the quartiles',
-        'Z-score > 3: the mean and standard deviation give it a stable, outlier-proof reference point',
-        'Min-max clipping to [0, 1]',
-        'Removing the top 50% of values',
+        'Z-score > 3: the mean and std anchor it against outliers',
+        'Min-max clipping of every value into the [0, 1] range',
+        'Removing the top half of values, where outliers live',
       ],
       answer: 0,
       explanation:
@@ -119,9 +119,9 @@ export const dataCleaning: Deck = {
       code: 'scaler = StandardScaler().fit(X)      # all data\nX_train, X_test = train_test_split(\n    scaler.transform(X))',
       choices: [
         'The scaler learned mean/std from test rows before the split',
-        'StandardScaler cannot be used before a split',
-        'train_test_split shuffles rows, which mixes future into past and is itself leakage',
-        'There is no leakage: scaling is a stateless transform, so fitting it on all rows is harmless',
+        'StandardScaler cannot legally be called before a split',
+        'train_test_split shuffles rows, mixing future into past',
+        'No leakage: scaling is stateless, so fitting on all rows is fine',
       ],
       answer: 0,
       explanation:
@@ -149,9 +149,9 @@ export const dataCleaning: Deck = {
       prompt: 'Encode `size = {S, M, L, XL}` vs `city = {NYC, LA, Chicago}`. Which pairing is right?',
       choices: [
         'size → ordinal integers (order is real), city → one-hot (no order)',
-        'Both → ordinal integers: it keeps dimensionality low and trees can split on any integer code',
-        'size → one-hot, city → ordinal integers',
-        'Both → leave as strings',
+        'Both → ordinal integers: keeps dimensionality low',
+        'size → one-hot (safer default), city → ordinal integers',
+        'Both → raw strings: sklearn models handle text natively',
       ],
       answer: 0,
       explanation:
@@ -168,10 +168,10 @@ export const dataCleaning: Deck = {
       type: 'mcq',
       prompt: 'Handling a 99:1 class imbalance, which is correct?',
       choices: [
-        'Resample (e.g. SMOTE) the training set only; keep the test set untouched',
-        'Oversample the whole dataset, then split: both sets stay balanced and comparable',
-        'Oversample the test set so metrics look stable',
-        'Class imbalance never needs handling',
+        'Resample (SMOTE) the training set only; test stays untouched',
+        'Oversample the whole dataset, then split it evenly',
+        'Oversample the test set so the metrics look more stable',
+        'Do nothing: class imbalance never needs special handling',
       ],
       answer: 0,
       explanation:

@@ -48,10 +48,10 @@ export const credAi103: Deck = {
       type: 'mcq',
       prompt: 'Cost, latency, and quality conflict when picking a model. The exam-grade approach?',
       choices: [
-        'Define eval criteria first, test candidate models against them, pick the cheapest that passes',
-        'Always deploy the largest model available: retries on bad output cost more than the bigger model does',
-        'Always pick the cheapest and accept the quality: cost is the only criterion you can measure objectively',
-        'Let each end user choose a model',
+        'Define evals first, test candidate models, pick the cheapest that passes',
+        'Always deploy the largest model: retries on bad output cost more than it does',
+        'Pick the cheapest model and accept whatever quality it produces',
+        'Let each end user choose a model from the full catalog per request',
       ],
       answer: 0,
       explanation:
@@ -78,10 +78,10 @@ export const credAi103: Deck = {
       type: 'mcq',
       prompt: 'What makes a tool safe enough for an agent to call?',
       choices: [
-        'Constrained input/output schemas, least privilege, blocked-action list, audit logging, human approval for consequential actions',
-        'A large model that rarely makes mistakes: model-level alignment makes tool-level guardrails redundant',
-        'Read-only access to everything: an agent that can only read cannot cause harm, so no schemas, logging, or approval steps are needed',
-        'A rate limit alone',
+        'Constrained schemas, least privilege, blocklist, audit logs, human approval',
+        'A large aligned model; model-level alignment makes guardrails redundant',
+        'Read-only access to everything, since a reading agent cannot cause harm',
+        'A strict rate limit alone, capping how much damage any loop can do',
       ],
       answer: 0,
       explanation:
@@ -92,10 +92,10 @@ export const credAi103: Deck = {
       type: 'mcq',
       prompt: 'When should an agent retrieve knowledge instead of relying on model memory?',
       choices: [
-        'When the data is fresh, private, or must be verifiable/citable',
-        'Always: model memory should never be used, since weights are frozen at training time and every answer from them is unverifiable',
-        'Only when the context window is full and older turns must be paged out to a store',
-        'When latency doesn’t matter',
+        'When the data is fresh, private, or must be verifiable and citable',
+        'Always: frozen weights make every answer from memory unverifiable',
+        'Only when the context window fills and old turns page out to a store',
+        'Only when latency does not matter, since retrieval always adds a hop',
       ],
       answer: 0,
       explanation:
@@ -112,10 +112,10 @@ export const credAi103: Deck = {
       type: 'mcq',
       prompt: 'How do you keep evaluation data from leaking into production prompts?',
       choices: [
-        'Keep eval sets in separate storage, never source few-shot examples from them, and audit prompt content',
-        'Encrypt the eval set at rest: ciphertext cannot appear in a prompt, so encryption is the leakage control',
-        'Use the eval set only on Fridays',
-        'Leakage only matters for fine-tuning, not prompts: prompts are stateless, so few-shot reuse of eval rows changes nothing',
+        'Separate storage, no few-shot examples from eval rows, audited prompts',
+        'Encrypt the eval set at rest; ciphertext cannot leak into a prompt',
+        'Run evals only on a fixed schedule so prompts and eval runs never mix',
+        'It only matters for fine-tuning; stateless prompts cannot memorize rows',
       ],
       answer: 0,
       explanation:
@@ -132,10 +132,10 @@ export const credAi103: Deck = {
       type: 'mcq',
       prompt: 'When is automated content understanding enough, and when do you add human review?',
       choices: [
-        'Automate high-volume structured extraction; route low-confidence, ambiguous, or high-stakes items to humans',
-        'Humans review everything, always: model confidence scores are too unreliable to route on, so no item may skip review',
-        'Automation is always enough once measured accuracy exceeds 90%; past that threshold review adds no value',
-        'Human review is only for images',
+        'Automate structured extraction; route low-confidence or high-stakes items to humans',
+        'Humans review everything; confidence scores are too unreliable to route on',
+        'Automation alone once measured accuracy passes 90%; past that review adds nothing',
+        'Human review is only needed for image inputs, never extracted text fields',
       ],
       answer: 0,
       explanation:

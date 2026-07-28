@@ -29,10 +29,10 @@ export const finetuning: Deck = {
       type: 'mcq',
       prompt: 'What does the Q in QLoRA add?',
       choices: [
-        'The frozen base is quantized to 4-bit (NF4): a 7B model fine-tunes on a single consumer GPU',
-        'Quantized gradients: backprop runs in 4-bit so the optimizer states fit alongside the model on one consumer GPU',
-        'Quadratic attention',
-        'Quality filtering of data',
+        'The frozen base is quantized to 4-bit (NF4), fitting a 7B fine-tune on one GPU',
+        'Quantized gradients: backprop runs in 4-bit so the optimizer states fit in VRAM',
+        'Quadratic attention over the adapter tokens for higher-capacity updates',
+        'Quality filtering of the training data before each LoRA epoch begins',
       ],
       answer: 0,
       explanation:
@@ -43,10 +43,10 @@ export const finetuning: Deck = {
       type: 'mcq',
       prompt: '500 meticulously curated training examples vs 50,000 scraped ones: for SFT, which wins?',
       choices: [
-        'Usually the 500. SFT is format/behavior teaching, where quality and consistency dominate volume',
-        'The 50,000: gradient noise from scraped examples averages out over enough steps, so scale reliably beats curation',
-        'Neither works under 1M examples',
-        'Exactly equal',
+        'Usually the 500: SFT teaches format and behavior, where quality dominates volume',
+        'The 50,000: gradient noise from scraping averages out, so scale reliably wins',
+        'Neither: SFT needs at least a million examples to move behavior at all',
+        'Exactly equal: total token count is what matters, not example quality',
       ],
       answer: 0,
       explanation:
@@ -57,10 +57,10 @@ export const finetuning: Deck = {
       type: 'mcq',
       prompt: 'SFT training data format for a chat model?',
       choices: [
-        'Conversations in the model’s own chat template: system/user/assistant turns, loss on assistant tokens',
-        'Raw text paragraphs',
-        'Question–answer CSV columns',
-        'Just the desired outputs with no prompts: the model already knows the questions, so training on answers alone suffices',
+        'The model\'s own chat template: system/user/assistant turns, loss on assistant tokens',
+        'Raw text paragraphs, which the trainer segments into turns automatically',
+        'Question and answer pairs as two CSV columns, one example per row',
+        'Desired outputs alone, no prompts: the model already knows the questions',
       ],
       answer: 0,
       explanation:
@@ -71,10 +71,10 @@ export const finetuning: Deck = {
       type: 'mcq',
       prompt: 'Starting hyperparameters for a LoRA SFT run?',
       choices: [
-        '1–3 epochs, LR ~1e-4 to 2e-4 (LoRA) with warmup + cosine decay, watching val loss for memorization',
-        '50+ epochs at LR 0.01: small datasets need many passes, and the frozen base makes LoRA immune to overfitting',
-        'One epoch at LR 1e-7',
-        'Whatever the defaults are, untouched',
+        '1–3 epochs, LR ~1e-4 to 2e-4, warmup + cosine decay, watching val loss',
+        '50+ epochs at LR 0.01: the frozen base makes LoRA immune to overfitting',
+        'One epoch at LR 1e-7: adapters converge in a single gentle pass',
+        'Library defaults untouched: trainers ship tuned values per model size',
       ],
       answer: 0,
       explanation:
@@ -85,10 +85,10 @@ export const finetuning: Deck = {
       type: 'mcq',
       prompt: 'After fine-tuning on legal documents, the model got worse at everything else. This is…',
       choices: [
-        'Catastrophic forgetting: mitigate with LoRA (frozen base limits damage), mixed general data, and fewer steps',
-        'Data leakage',
-        'A tokenizer mismatch: legal vocabulary shifted the embedding space, so retrain the tokenizer on general text to recover',
-        'Expected and unfixable',
+        'Catastrophic forgetting: mitigate with LoRA, mixed general data, fewer steps',
+        'Data leakage: legal test documents contaminated the training split',
+        'A tokenizer mismatch: the legal vocabulary shifted the whole embedding space',
+        'Expected and unfixable: specialization always costs general skill',
       ],
       answer: 0,
       explanation:
@@ -105,10 +105,10 @@ export const finetuning: Deck = {
       type: 'mcq',
       prompt: 'Serving a LoRA fine-tune: the two options?',
       choices: [
-        'Merge adapters into the base for zero-overhead single-model serving, or keep them separate to hot-swap many adapters on one base',
-        'Adapters cannot be served',
-        'Retrain the full model for production',
-        'Serve the A and B matrices as two separate model endpoints and ensemble their logits at request time: averaging base and adapter outputs reproduces the fine-tune',
+        'Merge adapters into the base for zero-overhead serving, or keep them separate to hot-swap',
+        'Adapters cannot be served directly; they exist only as training artifacts',
+        'Retrain the full model from scratch, since adapters are a training-only trick',
+        'Serve the base and adapter as two endpoints and average their logits per request',
       ],
       answer: 0,
       explanation:
@@ -119,10 +119,10 @@ export const finetuning: Deck = {
       type: 'mcq',
       prompt: 'DPO vs RLHF for preference tuning?',
       choices: [
-        'DPO optimizes preferences directly from (chosen, rejected) pairs, no reward model, no RL loop; simpler and usually sufficient',
-        'DPO needs more compute than RLHF: it jointly trains the policy, a reward model, and a reference model in a single combined loop',
-        'RLHF needs no human data',
-        'They are unrelated techniques',
+        'DPO optimizes preferences directly from chosen/rejected pairs: no reward model or RL',
+        'DPO needs more compute than RLHF: it jointly trains policy, reward, and reference models',
+        'RLHF needs no human data: the reward model labels its own comparisons',
+        'They are unrelated: DPO tunes decoding parameters, not model weights',
       ],
       answer: 0,
       explanation:
@@ -133,10 +133,10 @@ export const finetuning: Deck = {
       type: 'mcq',
       prompt: 'What is distillation in the LLM era, practically?',
       choices: [
-        'Generate training data with a strong model, fine-tune a small cheap model on it for the narrow task',
-        'Compressing weights with gzip',
-        'Removing layers at random',
-        'Copy the teacher\'s attention weights into the student layer by layer, then quantize whatever does not fit the smaller model',
+        'Generate data with a strong model; fine-tune a small cheap model on it',
+        'Compressing the weight tensors with lossless codecs like gzip',
+        'Removing layers at random until the model fits the target budget',
+        'Copying the teacher\'s attention weights into the student layer by layer',
       ],
       answer: 0,
       explanation:
@@ -147,10 +147,10 @@ export const finetuning: Deck = {
       type: 'mcq',
       prompt: 'Train loss falls, validation loss rises from epoch 2. You…',
       choices: [
-        'Stop at the epoch-2 checkpoint: it is memorizing; more data or stronger regularization if you need more',
-        'Train longer: validation loss often double-descends back down once the model groks the task, so push through the bump',
-        'Raise the learning rate',
-        'Ignore val loss; train loss is what matters',
+        'Stop at the epoch-2 checkpoint: it is memorizing; add data or regularization',
+        'Train longer: validation loss double-descends once the model groks the task',
+        'Raise the learning rate so the optimizer escapes the memorization basin',
+        'Ignore val loss; train loss is the signal that matters for SFT',
       ],
       answer: 0,
       explanation:

@@ -19,10 +19,10 @@ export const sysScaling: Deck = {
       type: 'mcq',
       prompt: 'Why route cache traffic with consistent hashing instead of round robin?',
       choices: [
-        'Same key always hits the same node, so each key is cached once, not N times',
-        'Consistent hashing balances load more evenly than round robin, which drifts toward slower nodes',
-        'It is cheaper per request: one hash beats maintaining round-robin state across balancer instances',
-        'It removes the need for cache expiry',
+        'The same key always hits the same node, so it is cached once',
+        'It balances load more evenly than round robin can',
+        'One hash per request is cheaper than round-robin state',
+        'It removes the need for cache expiry entirely',
       ],
       answer: 0,
       explanation:
@@ -34,9 +34,9 @@ export const sysScaling: Deck = {
       prompt: 'A load balancer routes /api/* and /static/* to different server pools. Which layer must it operate at?',
       choices: [
         'L7: path-based routing requires parsing the HTTP request',
-        'L4: port-based rules can distinguish API and static traffic at the transport layer',
+        'L4: port-based rules can separate API and static traffic',
         'L3: routing decisions belong to the IP layer',
-        'Either: modern L4 balancers peek at the URL without terminating the connection',
+        'Either: modern L4 balancers can peek at the URL',
       ],
       answer: 0,
       explanation:
@@ -76,8 +76,8 @@ export const sysScaling: Deck = {
       prompt: 'Events are range-sharded by timestamp. What goes wrong as write traffic grows?',
       choices: [
         'All new writes land on the newest shard: one hot shard does all the work',
-        'Old shards fill to capacity and start rejecting reads until they are compacted',
-        'Range queries break: time ranges now span shard boundaries and cannot be merged',
+        'Old shards hit capacity and reject reads until compacted',
+        'Range queries break: time ranges now span shard boundaries',
         'Nothing: range sharding spreads writes evenly by design',
       ],
       answer: 0,
@@ -91,8 +91,8 @@ export const sysScaling: Deck = {
       choices: [
         'About 80%: nearly every key gets a new modulus result',
         'About 20%: only the keys the new node takes over need to move to it',
-        'None: the hash of a key never changes, so its placement never changes',
-        'Exactly 50%: half re-map on average',
+        'None: a key\'s hash never changes, so placement never changes',
+        'Exactly 50%: on average half the keys re-map each time',
       ],
       answer: 0,
       explanation:
@@ -110,9 +110,9 @@ export const sysScaling: Deck = {
       prompt: 'A user saves their profile, the page reloads, and the old value appears. Likely cause in a leader-follower setup?',
       choices: [
         'The read hit a lagging follower: replication is asynchronous',
-        'The leader dropped the write under load before replicating it to any follower',
-        'The cache and the database deadlocked',
-        'The leader rolled back the transaction when a follower failed to acknowledge it',
+        'The leader dropped the write under load before replicating it',
+        'The cache and the database deadlocked on the same row',
+        'The leader rolled back when a follower failed to ack',
       ],
       answer: 0,
       explanation:
@@ -129,10 +129,10 @@ export const sysScaling: Deck = {
       type: 'mcq',
       prompt: 'An IO-bound API autoscales on CPU. Latency climbs but no new instances launch. Why?',
       choices: [
-        'Threads are blocked waiting on IO, so CPU stays low while requests queue',
-        'CPU-based scaling has too long a cooldown window to catch gradual latency growth',
-        'Autoscaling cannot help IO-bound services at all',
-        'The load balancer absorbs the queueing, so instance CPU metrics never see the backlog',
+        'Threads are blocked on IO, so CPU stays low while requests queue',
+        'CPU scaling has too long a cooldown to catch gradual latency growth',
+        'Autoscaling cannot help IO-bound services in any form',
+        'The load balancer absorbs the queueing before CPU sees it',
       ],
       answer: 0,
       explanation:
@@ -143,10 +143,10 @@ export const sysScaling: Deck = {
       type: 'mcq',
       prompt: 'What does putting a CDN in front of your origin primarily buy you?',
       choices: [
-        'Cacheable responses served from edge locations: origin bandwidth and user latency both drop',
-        'Read scaling for the database, since edge nodes replicate frequently queried rows',
-        'Complete protection against application-layer attacks, since all traffic terminates at the edge first',
-        'Strong consistency for dynamic content',
+        'Cacheable responses served from edge locations near users',
+        'Database read scaling: edge nodes replicate hot rows',
+        'Complete protection against application-layer attacks at the edge',
+        'Strong consistency for dynamic, personalized content',
       ],
       answer: 0,
       explanation:
@@ -167,10 +167,10 @@ export const sysScaling: Deck = {
       type: 'mcq',
       prompt: 'Token bucket vs window-based rate limiting: what does token bucket handle better?',
       choices: [
-        'Short bursts: saved-up tokens let a client briefly exceed the steady rate',
-        'Exact fairness: tokens guarantee each client an equal share of total capacity',
-        'Distributed enforcement: buckets stay synchronized across nodes without shared state',
-        'Blocking sustained overload',
+        'Short bursts: saved tokens let a client briefly exceed the rate',
+        'Exact fairness: every client gets an equal share of total capacity',
+        'Distributed enforcement: buckets sync across nodes for free',
+        'Blocking sustained overload from a single abusive client',
       ],
       answer: 0,
       explanation:

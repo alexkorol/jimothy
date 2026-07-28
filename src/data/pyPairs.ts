@@ -63,9 +63,9 @@ export const pyPairs: Deck = {
       prompt: 'Group `[("a", 1), ("b", 2), ("a", 3)]` into `{"a": [1, 3], "b": [2]}`. The idiomatic tool?',
       choices: [
         'defaultdict(list), then d[k].append(v) in a loop',
-        'A nested list comprehension that rebuilds the value list for each key in one pass',
-        'dict(pairs) directly: duplicate keys merge their values into a list',
-        'set() then sorted()',
+        'A nested comprehension rebuilding each value list',
+        'dict(pairs); duplicate keys merge into a list',
+        'set() to dedupe the keys, then sorted()',
       ],
       answer: 0,
       explanation:
@@ -100,7 +100,7 @@ export const pyPairs: Deck = {
       type: 'mcq',
       prompt: 'What does this print?',
       code: 'pairs = [(3, 7), (1, 5)]\nresult = pairs.sort()\nprint(result)',
-      choices: ['None; .sort() sorts in place and returns None', '[(1, 5), (3, 7)]: .sort() hands back the freshly sorted list', '[(3, 7), (1, 5)]', 'TypeError'],
+      choices: ['None; .sort() mutates and returns None', '[(1, 5), (3, 7)]; it returns the sorted list', '[(3, 7), (1, 5)]; the list is left unchanged', 'TypeError; tuples have no default ordering'],
       answer: 0,
       explanation:
         'list.sort() mutates and returns None; sorted(pairs) returns a new sorted list. Assigning .sort()’s result is a bug that has sunk many live coding rounds.',

@@ -30,7 +30,7 @@ export const patternsBinsearch: Deck = {
       prompt: 'Array has duplicates; you need the LEFTMOST occurrence of target. What changes?',
       choices: [
         'On equality keep searching left: record mid, set hi = mid - 1',
-        'Return the first mid that matches: binary search always lands on the leftmost duplicate',
+        'Return the first matching mid: it always lands on the leftmost duplicate',
         'On a match, scan linearly leftward until the value changes: still O(log n) overall',
         'Binary search cannot handle duplicates: the invariant breaks when a[mid] repeats',
       ],
@@ -53,10 +53,10 @@ export const patternsBinsearch: Deck = {
       type: 'mcq',
       prompt: 'Search in a rotated sorted array ([4,5,6,7,0,1,2]): the key insight?',
       choices: [
-        'One half is always properly sorted: check which, and whether target lies in its range',
-        'Find the pivot, un-rotate the array in O(n), then run a normal binary search on the result',
-        'Rotation destroys the ordering, so only a linear scan guarantees correctness',
-        'Use two independent binary searches always',
+        'One half is always sorted: check which, and if target is in its range',
+        'Find the pivot, un-rotate in O(n), then binary search normally',
+        'Rotation destroys ordering: only a linear scan is guaranteed correct',
+        'Always run two independent binary searches, one per half',
       ],
       answer: 0,
       explanation:
@@ -73,10 +73,10 @@ export const patternsBinsearch: Deck = {
       type: 'mcq',
       prompt: '"Minimum ship capacity to deliver packages in D days", where does binary search run?',
       choices: [
-        'Over the ANSWER range (max package … total weight), with a feasibility check per guess',
-        'Over the package array indices, splitting at the mid index to balance weight between halves',
+        'Over the ANSWER range, max package to total weight, feasibility per guess',
+        'Over the array indices, splitting at mid to balance the halves',
         'Over the days: binary search D down to 1 until the schedule stops fitting',
-        'It is a DP problem, not binary search',
+        'It is a DP problem: knapsack over days, not binary search',
       ],
       answer: 0,
       explanation:
@@ -87,10 +87,10 @@ export const patternsBinsearch: Deck = {
       type: 'mcq',
       prompt: 'Why do other languages write `mid = lo + (hi - lo) // 2`, and does Python care?',
       choices: [
-        '(lo + hi) can overflow fixed-width ints; Python ints are arbitrary precision so it’s safe, but say why',
-        'The subtraction form rounds toward lo, preventing mid from ever equaling hi and looping; Python needs it too',
-        'Subtraction is cheaper than addition on most CPUs, so it is measurably faster in Python as well',
-        'Python requires that form',
+        '(lo + hi) overflows fixed-width ints; Python’s are arbitrary precision',
+        'The subtraction form stops mid from equaling hi and looping; Python needs it too',
+        'Subtraction is cheaper than addition on most CPUs, so it is faster',
+        'Python requires that form: (lo + hi) // 2 raises on large ints',
       ],
       answer: 0,
       explanation:
@@ -102,9 +102,9 @@ export const patternsBinsearch: Deck = {
       prompt: 'Integer square root of n without math.sqrt: approach?',
       choices: [
         'Binary search the answer in [0, n]: first k where k² > n, minus one',
-        'Increment k from 0 and stop when k² exceeds n: O(√n) is the best possible without floats',
+        'Increment k from 0 and stop when k² exceeds n: O(√n) is optimal',
         'Newton’s method is the only approach that converges without floating point',
-        'Impossible without floats',
+        'Impossible: square roots are irrational, so floats are required',
       ],
       answer: 0,
       explanation:
@@ -116,9 +116,9 @@ export const patternsBinsearch: Deck = {
       prompt: 'Search a sorted m×n matrix (each row sorted, rows in order) in O(log(mn))?',
       choices: [
         'Treat it as one flat sorted array: index i maps to matrix[i // n][i % n]',
-        'Binary search each row separately: O(m log n) is the best achievable for a 2D layout',
+        'Binary search each row separately: O(m log n) is the 2D optimum',
         'Start from the top-left corner and step right or down toward larger values',
-        'Convert to a list first',
+        'Flatten into a Python list first, then binary search that copy',
       ],
       answer: 0,
       explanation:
@@ -129,9 +129,9 @@ export const patternsBinsearch: Deck = {
       type: 'mcq',
       prompt: 'Find a peak element (bigger than both neighbors) in O(log n): how can that work on unsorted data?',
       choices: [
-        'Walk toward the rising side: if a[mid] < a[mid+1], a peak must exist right of mid',
-        'It cannot: binary search requires sorted input, so unsorted data forces an O(n) scan',
-        'Sort a copy first, then binary search the maximum',
+        'If a[mid] < a[mid+1], a peak must exist right of mid: walk that way',
+        'It cannot: binary search needs sorted input, so scan in O(n)',
+        'Sort a copy first in O(n log n), then binary search the maximum',
         'Randomly probe indices: expected O(log n) trials to land on a peak',
       ],
       answer: 0,
@@ -149,14 +149,14 @@ export const patternsBinsearch: Deck = {
       type: 'mcq',
       prompt: 'When can you beat O(n log n) sorting?',
       choices: [
-        'Small known value range: counting sort O(n + k), e.g. sorting letters or 0-100 scores',
-        'Never: the information-theoretic n log n lower bound applies to every possible sorting algorithm',
+        'Small known value range: counting sort is O(n + k)',
+        'Never: the n log n lower bound applies to every sorting algorithm',
         'With a median-of-medians pivot, quicksort drops to O(n) comparisons',
-        'By sorting in parallel threads',
+        'By splitting the sort across parallel threads and merging',
       ],
       answer: 0,
       explanation:
-        'The n log n bound applies to COMPARISON sorts. Counting/radix/bucket exploit value structure instead. "Sort colors" (Dutch flag) is the interview cameo.',
+        'The n log n bound applies to COMPARISON sorts. Counting/radix/bucket exploit value structure instead: sorting letters, or 0-100 scores. "Sort colors" (Dutch flag) is the interview cameo.',
     },
   ],
 };

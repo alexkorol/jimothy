@@ -26,14 +26,14 @@ export const sysCaseDrills: Deck = {
       type: 'mcq',
       prompt: 'Best way to generate short codes at scale?',
       choices: [
-        'Pre-allocated counter ranges (or a key service) per app server, encoded base62',
-        'MD5 the long URL and keep the first 7 characters, so the same URL always maps to the same code',
-        'One global auto-increment counter queried on every request, since it guarantees unique sequential codes',
-        'Random 7-char strings with no collision check; the keyspace is too large for collisions to matter',
+        'Pre-allocated counter ranges per app server, encoded base62',
+        'MD5 the long URL and keep the first 7 characters as the code',
+        'One global auto-increment counter queried on every request',
+        'Random 7-char strings with no collision check on insert',
       ],
       answer: 0,
       explanation:
-        'Truncated hashes collide and force retry logic; a single global counter is a bottleneck and a single point of failure; unchecked randoms collide eventually. Batched ranges give collision-free codes with no per-request coordination. Volunteer the capacity math: 62 characters, so 62^7 is about 3.5 trillion codes.',
+        'Truncated hashes collide and force retry logic; a single global counter is a bottleneck and a single point of failure; unchecked randoms collide eventually. Batched ranges give collision-free codes with no per-request coordination; a dedicated key-generation service is the same idea. Volunteer the capacity math: 62 characters, so 62^7 is about 3.5 trillion codes.',
     },
     {
       id: 'sdc-shortener-redirect',
@@ -55,8 +55,8 @@ export const sysCaseDrills: Deck = {
       prompt: 'Two gateway nodes both read a Redis counter at 9 of 10, both allow the request, both write back 10. Standard fix?',
       choices: [
         'Make check-and-update one atomic Redis operation: a Lua script, or INCR with EXPIRE',
-        'Wrap every request in a distributed lock so only one gateway node can touch the counter at a time',
-        'Give each gateway node its own local counter to eliminate the shared-state race entirely',
+        'Wrap every request in a distributed lock so only one node touches the counter',
+        'Give each gateway node its own local counter to eliminate the race',
         'Lower the configured limit to leave headroom for the occasional double-grant',
       ],
       answer: 0,
@@ -82,10 +82,10 @@ export const sysCaseDrills: Deck = {
       type: 'mcq',
       prompt: 'Fan-out on write precomputes every feed, but one post from a 50M-follower account means 50M list writes. Standard answer?',
       choices: [
-        'Hybrid: push for normal accounts, pull for high-follower accounts, merge the two at read time',
-        'Switch everyone to fan-out on read, since computing feeds at request time removes the write amplification entirely',
-        'Shard the follower list and fan out to all 50M anyway; enough parallel workers make the write cost invisible',
-        'Cap how many followers an account can have',
+        'Hybrid: push for normal accounts, pull for high-follower ones, merge at read time',
+        'Switch everyone to fan-out on read and compute feeds at request time',
+        'Shard the follower list and fan out to all 50M with parallel workers',
+        'Cap follower counts so a single post can never exceed the write budget',
       ],
       answer: 0,
       explanation:
@@ -103,8 +103,8 @@ export const sysCaseDrills: Deck = {
       prompt: 'How do you guarantee message order within a conversation?',
       choices: [
         'Per-conversation monotonic sequence numbers assigned by the server',
-        'Trust client timestamps, which record the moment each user actually hit send',
-        'Trust server wall-clock timestamps, since NTP keeps nodes within a few milliseconds of each other',
+        'Trust client timestamps, which record the moment each user hit send',
+        'Trust server wall-clock timestamps, since NTP keeps nodes in sync',
         'Deliver in arrival order; TCP already guarantees ordering',
       ],
       answer: 0,
@@ -159,9 +159,9 @@ export const sysCaseDrills: Deck = {
       prompt: 'A crawler needs dedup at two distinct levels. Which pair?',
       choices: [
         'Normalized seen-URLs (Bloom filter) plus content fingerprints (e.g. SimHash)',
-        'Seen URLs plus seen domains, marking a whole domain as done once its pages have been fetched',
-        'Exact content checksums only; refetching URLs is fine because the fetch is cheap compared to parsing',
-        'A distributed lock held per URL',
+        'Seen-URL tracking plus seen-domain tracking, marking whole domains as done',
+        'Exact content checksums only, since refetching URLs is cheap',
+        'A distributed lock held per URL while any worker is fetching it',
       ],
       answer: 0,
       explanation:
@@ -172,10 +172,10 @@ export const sysCaseDrills: Deck = {
       type: 'mcq',
       prompt: 'Typeahead must return suggestions within ~100ms per keystroke. The key decision?',
       choices: [
-        'Serve precomputed top-k lists per prefix; rebuild them offline from query logs',
-        'Walk a trie and rank every completion at query time, so results always reflect live frequencies',
-        'SQL LIKE \'prefix%\' with ORDER BY frequency, which a B-tree index on the column makes fast enough',
-        'Query the main search index directly per keystroke',
+        'Precomputed top-k lists per prefix, rebuilt offline from query logs',
+        'Walk a trie and rank every completion live at query time',
+        'SQL LIKE \'prefix%\' with ORDER BY frequency and a B-tree index on the column',
+        'Query the primary search index directly on every keystroke',
       ],
       answer: 0,
       explanation:
@@ -204,10 +204,10 @@ export const sysCaseDrills: Deck = {
       type: 'mcq',
       prompt: 'UUIDv4 vs Snowflake-style ids: what does Snowflake actually buy you?',
       choices: [
-        'Time-ordered 64-bit ids that index well; the cost is machine-id assignment and trusting clocks',
+        'Time-ordered 64-bit ids that index well; the cost is machine ids and clock trust',
         'Stronger randomness guarantees, since the timestamp bits add entropy a UUID does not have',
-        'A lower collision probability than UUIDs, whose 122 random bits still collide at high write rates',
-        'The same zero-coordination property as UUIDs',
+        'A lower collision probability than UUIDs, whose random bits still collide at high write rates',
+        'The same zero-coordination property as UUIDs, with no clock dependence',
       ],
       answer: 0,
       explanation:

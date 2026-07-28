@@ -21,9 +21,9 @@ export const jsFundamentals: Deck = {
       code: 'console.log(x);\nlet x = 1;',
       choices: [
         'Throws a ReferenceError: x is in the temporal dead zone',
-        'undefined: let hoists exactly like var, so the binding exists and reads as undefined',
-        '1: hoisting moves the whole declaration, initializer included, above the log',
-        'null',
+        'undefined: let hoists exactly like var, so the read succeeds',
+        '1: hoisting moves the whole declaration, initializer included',
+        'null: an uninitialized binding reads as null before assignment',
       ],
       answer: 0,
       explanation:
@@ -40,10 +40,10 @@ export const jsFundamentals: Deck = {
       type: 'mcq',
       prompt: 'Which of these values is truthy?',
       choices: [
-        '"0" (a non-empty string)',
+        '"0"',
         '0',
-        '"" (empty, but strings are objects, so truthy)',
-        'NaN (not a number, but still a number value, so truthy)',
+        '""',
+        'NaN',
       ],
       answer: 0,
       explanation:
@@ -56,8 +56,8 @@ export const jsFundamentals: Deck = {
       choices: [
         'false: two different objects, and === compares references',
         'true: array literals with the same contents are equal by value',
-        'true: === deep-compares arrays element by element before falling back to identity',
-        'It throws: arrays cannot be compared',
+        'true: === deep-compares arrays element by element',
+        'It throws a TypeError: arrays cannot be compared with ===',
       ],
       answer: 0,
       explanation:
@@ -151,8 +151,8 @@ export const jsFundamentals: Deck = {
       choices: [
         '0: defaults only apply when the value is undefined',
         '500: destructuring defaults replace any falsy value, including 0',
-        'undefined',
-        'It throws a TypeError',
+        'undefined: the default declaration shadows the incoming value',
+        'It throws a TypeError because 0 cannot be destructured',
       ],
       answer: 0,
       explanation:
@@ -180,10 +180,10 @@ export const jsFundamentals: Deck = {
       prompt: 'What does this return?',
       code: 'JSON.stringify({ a: undefined, b: () => 1,\n  c: new Date(0), d: NaN })',
       choices: [
-        '\'{"c":"1970-01-01T00:00:00.000Z","d":null}\': undefined and functions are dropped, Dates become ISO strings, NaN becomes null',
-        '\'{"a":null,"b":null,"c":{},"d":null}\': every unserializable value becomes null, and Dates serialize as empty objects since they have no own enumerable properties',
-        'It throws a TypeError on the function',
-        '\'{"c":"1970-01-01T00:00:00.000Z"}\': NaN is dropped too, just like undefined and functions',
+        '\'{"c":"1970-01-01T00:00:00.000Z","d":null}\': Dates become ISO strings, NaN becomes null',
+        '\'{"a":null,"b":null,"c":{},"d":null}\': every unserializable value becomes null',
+        'It throws a TypeError on the function before serializing anything',
+        '\'{"c":"1970-01-01T00:00:00.000Z"}\': NaN is dropped just like undefined',
       ],
       answer: 0,
       explanation:

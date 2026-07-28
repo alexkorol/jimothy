@@ -20,9 +20,9 @@ export const patternsIntervals: Deck = {
       prompt: 'First move in almost every interval problem?',
       choices: [
         'Sort the intervals (usually by start)',
-        'Build a hash map from each start to its end for O(1) overlap lookups',
-        'Binary search each interval against the rest for overlaps',
-        'Convert to a linked list',
+        'Build a hash map from each start to its end',
+        'Binary search each interval against the rest',
+        'Convert the interval list into a linked list first',
       ],
       answer: 0,
       explanation:
@@ -81,7 +81,7 @@ export const patternsIntervals: Deck = {
         'Yes: s <= le treats touching endpoints as overlap, giving [1, 8]',
         'No: overlap requires s < le, and sharing the single point 5 fails that test',
         'Only if the intervals are open: closed endpoints never count as overlap',
-        'It causes an infinite loop',
+        'It causes an infinite loop: the merge keeps re-extending to 5',
       ],
       answer: 0,
       explanation:
@@ -94,7 +94,7 @@ export const patternsIntervals: Deck = {
       choices: [
         'O(n log n)',
         'O(n): one linear merge pass',
-        'O(n²) from pairwise overlap checks',
+        'O(n²): pairwise overlap checks',
         'O(log n)',
       ],
       answer: 0,

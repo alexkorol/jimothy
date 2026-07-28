@@ -24,28 +24,28 @@ export const pyOopTesting: Deck = {
       prompt: 'What is the bug?',
       code: 'class Dog:\n    tricks = []\n    def learn(self, t):\n        self.tricks.append(t)',
       choices: [
-        'tricks is a class attribute. ALL dogs share one list; assign self.tricks = [] in __init__',
-        'learn() needs @staticmethod: without it, self points at the class, so every append lands on the class attribute',
-        'Lists cannot be class attributes',
-        'No bug',
+        'tricks is a class attribute: one list shared by ALL dogs',
+        'learn() needs @staticmethod; without it, self points at the class object',
+        'Lists cannot be class attributes, only immutable values can be',
+        'No bug: each instance gets its own copy of class attributes at creation',
       ],
       answer: 0,
       explanation:
-        'Class-level mutables are shared state, same disease as mutable default args. Immutable class attributes (counters, constants) are fine.',
+        'Class-level mutables are shared state, same disease as mutable default args. Fix: assign self.tricks = [] in __init__. Immutable class attributes (counters, constants) are fine.',
     },
     {
       id: 'oop-repr',
       type: 'mcq',
       prompt: '`__repr__` vs `__str__`?',
       choices: [
-        '__repr__ is the unambiguous developer view (debugger, containers); __str__ the friendly print view; define __repr__ at minimum',
-        '__str__ is what lists call on their elements when printed; __repr__ is only used by the interactive prompt, so define __str__ first',
-        'They must always be identical',
-        '__repr__ only exists on dataclasses',
+        '__repr__ is the unambiguous developer view; __str__ is the friendly print view',
+        '__str__ is what containers call on their elements; __repr__ only serves the REPL',
+        'They are required to be identical, so defining one defines the other',
+        '__repr__ only exists on dataclasses, which generate it automatically',
       ],
       answer: 0,
       explanation:
-        'print falls back to __repr__ when __str__ is missing, but not vice versa. A good __repr__ looks like the constructor call: Point(x=1, y=2).',
+        'print falls back to __repr__ when __str__ is missing, but not vice versa, so define __repr__ at minimum. A good __repr__ looks like the constructor call: Point(x=1, y=2).',
     },
     {
       id: 'oop-super',
@@ -62,10 +62,10 @@ export const pyOopTesting: Deck = {
       type: 'mcq',
       prompt: '@staticmethod vs @classmethod?',
       choices: [
-        'staticmethod gets no implicit argument; classmethod gets cls: the idiom for alternate constructors like from_json()',
-        'classmethod is faster',
-        'staticmethod can only be private',
-        'They are interchangeable: Python passes cls to both, but staticmethod silently discards it, so choosing one is purely a style call',
+        'staticmethod gets no implicit argument; classmethod receives cls',
+        'classmethod is faster because it skips instance attribute lookup',
+        'staticmethod can only be used on private, underscore-named helpers',
+        'They are interchangeable: staticmethod just discards the cls it receives',
       ],
       answer: 0,
       explanation:
@@ -77,10 +77,10 @@ export const pyOopTesting: Deck = {
       prompt: 'What does @property buy you?',
       code: 'class Circle:\n    @property\n    def area(self):\n        return 3.14159 * self.r ** 2',
       choices: [
-        'Computed attribute access: c.area without parentheses, no API break if it later becomes stored',
-        'It caches the result after the first access and recomputes only when self.r changes, like a spreadsheet cell',
-        'It makes the attribute private',
-        'It enables multiple inheritance',
+        'Attribute-style access to computed values: c.area, no parentheses',
+        'It caches the first result and recomputes only when self.r changes',
+        'It makes the attribute private and read-only from outside the class',
+        'It registers the class for cooperative multiple inheritance',
       ],
       answer: 0,
       explanation:
@@ -91,10 +91,10 @@ export const pyOopTesting: Deck = {
       type: 'mcq',
       prompt: 'Two Point(1, 2) instances compare unequal. Why, and the fix?',
       choices: [
-        'Default __eq__ is identity: implement __eq__ (and __hash__), or use @dataclass which generates them',
-        'Points can never be equal',
-        'You must override __cmp__, the master comparison hook that == delegates to before it ever looks at __eq__',
-        'Use is instead of ==',
+        'Default __eq__ is identity: implement __eq__, or use @dataclass',
+        'Distinct Point instances can never compare equal in Python',
+        'You must override __cmp__, the hook that == delegates to first',
+        'Use is instead of ==: identity is the right check for values',
       ],
       answer: 0,
       explanation:
@@ -105,10 +105,10 @@ export const pyOopTesting: Deck = {
       type: 'mcq',
       prompt: 'How do you force subclasses to implement a method?',
       choices: [
-        'Inherit from ABC and mark it @abstractmethod: instantiation fails until it’s implemented',
-        'raise NotImplementedError in the base method: the interpreter checks for it at class creation and rejects incomplete subclasses',
-        'Name it with a leading underscore',
-        'Python cannot express this',
+        'Inherit from ABC and decorate the method with @abstractmethod',
+        'raise NotImplementedError in the base; subclasses fail at class creation',
+        'Name it with a leading underscore so subclasses must redefine it',
+        'Python cannot express this without a third-party plugin',
       ],
       answer: 0,
       explanation:
@@ -145,10 +145,10 @@ export const pyOopTesting: Deck = {
       type: 'mcq',
       prompt: 'What is a pytest fixture?',
       choices: [
-        'A named setup function; tests receive its return value by declaring the name as a parameter',
-        'A hardcoded test data file',
-        'A class every test must inherit',
-        'A mock object that automatically replaces every dependency the test imports, restored after each run',
+        'A named setup function; tests request it by naming it as a parameter',
+        'A hardcoded data file loaded from the tests/fixtures directory',
+        'A base class that every test class must inherit to be collected',
+        'A mock that auto-replaces every dependency the test imports',
       ],
       answer: 0,
       explanation:
@@ -160,9 +160,9 @@ export const pyOopTesting: Deck = {
       prompt: 'Run one test body over many input/expected pairs?',
       choices: [
         '@pytest.mark.parametrize("raw,expected", [("a,b", 2), ("", 0)])',
-        'Copy-paste the test per case',
-        'A for-loop of asserts inside one test body: pytest detects the loop and reports each iteration as its own test case',
-        'pytest cannot do this',
+        'Copy-paste the test body once per input/expected case',
+        'A for-loop of asserts; pytest reports each iteration separately',
+        'pytest cannot do this; use unittest\'s subTest instead',
       ],
       answer: 0,
       explanation:
@@ -173,10 +173,10 @@ export const pyOopTesting: Deck = {
       type: 'mcq',
       prompt: 'Testing code that calls a paid LLM API: the standard approach?',
       choices: [
-        'monkeypatch/mock the client call to return a canned response; assert your handling logic',
-        'Call the real API in every test run',
-        'Skip testing that code path',
-        'Lower the temperature to 0 so the output is deterministic, then assert against the exact real completion text',
+        'monkeypatch/mock the client call to return a canned response',
+        'Call the real API in every run so tests reflect production',
+        'Skip that path; network-dependent code is untestable by design',
+        'Set temperature to 0 and assert the exact real completion text',
       ],
       answer: 0,
       explanation:

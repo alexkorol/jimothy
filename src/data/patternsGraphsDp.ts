@@ -19,10 +19,10 @@ export const patternsGraphsDp: Deck = {
       type: 'mcq',
       prompt: 'In-order traversal of a binary search tree visits nodes in…',
       choices: [
-        'Sorted ascending order',
-        'Insertion order: the sequence in which keys were added to the tree',
-        'Level order, top to bottom and left to right',
-        'Random order',
+        'Sorted ascending order of keys',
+        'The order in which keys were inserted',
+        'Level order, root first then by depth',
+        'An arbitrary order depending on balance',
       ],
       answer: 0,
       explanation:
@@ -44,9 +44,9 @@ export const patternsGraphsDp: Deck = {
       prompt: 'Detecting a cycle in a *directed* graph: the standard approach?',
       choices: [
         'DFS tracking the current recursion stack (three colors)',
-        'Count the edges: any directed graph with edges ≥ nodes must contain a cycle',
-        'BFS from every node: a cycle exists if any node is ever reached twice',
-        'Sort the adjacency list',
+        'Count edges: edges ≥ nodes forces a cycle',
+        'BFS from every node, flagging any node reached twice',
+        'Sort the adjacency list and scan for repeats',
       ],
       answer: 0,
       explanation:
@@ -90,8 +90,8 @@ export const patternsGraphsDp: Deck = {
       choices: [
         'Fibonacci: ways(n) = ways(n−1) + ways(n−2)',
         'Binary search on the number of 2-steps taken',
-        'A greedy problem: take the largest step available at each point',
-        'Quicksort partitioning',
+        'A greedy problem: always take the largest step',
+        'Quicksort partitioning around the midpoint step',
       ],
       answer: 0,
       explanation:
@@ -136,10 +136,10 @@ export const patternsGraphsDp: Deck = {
       type: 'mcq',
       prompt: "Why does Dijkstra's algorithm fail on graphs with negative edge weights?",
       choices: [
-        'It finalizes a node when popped from the min-heap, assuming its distance can never improve; a negative edge later can break that assumption',
-        'The min-heap ordering invariant assumes non-negative keys, so once a key goes negative the priority queue starts popping nodes in the wrong order',
-        'Relaxation loops forever: a negative edge keeps re-adding nodes to the heap, so the algorithm never terminates on cyclic graphs',
-        'Negative weights overflow the distance array',
+        'It finalizes each popped node, and a later negative edge can still shorten that path',
+        'The min-heap invariant assumes non-negative keys, so it pops nodes in the wrong order',
+        'A negative edge keeps re-adding nodes to the heap, so relaxation never terminates',
+        'Negative weights overflow the distance array during relaxation',
       ],
       answer: 0,
       explanation:
@@ -150,10 +150,10 @@ export const patternsGraphsDp: Deck = {
       type: 'mcq',
       prompt: '0/1 knapsack compressed to a 1D array: which direction do you iterate capacity, and why?',
       choices: [
-        'High to low, so dp[c - w] still holds the previous item-row value and the item is not counted twice',
-        'Low to high, so smaller capacities are computed first and each dp[c] can build on the freshly updated dp[c - w]',
-        'Either direction: the max() update is idempotent, so iteration order cannot change the result',
-        'Low to high, but only when weights are sorted',
+        'High to low, so dp[c - w] still holds the previous item\'s value',
+        'Low to high, so each dp[c] builds on the freshly updated dp[c - w]',
+        'Either direction: the max() update makes order irrelevant',
+        'Low to high, but only after sorting items by weight',
       ],
       answer: 0,
       explanation:

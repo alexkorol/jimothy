@@ -22,7 +22,7 @@ export const pyStrings: Deck = {
       id: 'st-immutable',
       type: 'mcq',
       prompt: 'What does `s[0] = "X"` do to a string?',
-      choices: ['Raises TypeError; strings are immutable', 'Replaces the first character in place, like list item assignment', 'Prepends X', 'Returns a new string'],
+      choices: ['Raises TypeError; strings are immutable', 'Replaces the first character in place', 'Inserts X before the first character', 'Returns a new string with X at index 0'],
       answer: 0,
       explanation:
         'Build a new string instead: "X" + s[1:]. Immutability is also why repeated += in a loop is O(n²): collect parts in a list and join once.',
@@ -33,9 +33,9 @@ export const pyStrings: Deck = {
       prompt: 'Building a long string from 10,000 pieces: the right way?',
       choices: [
         'Append pieces to a list, then "".join(parts) once',
-        's += piece in a loop: CPython resizes the string in place, so it is equally fast',
-        'Use recursion',
-        'Write to a file and read it back',
+        's += piece in a loop; CPython resizes in place',
+        'Build the string recursively by halving',
+        'Write pieces to a file and read it back',
       ],
       answer: 0,
       explanation:
@@ -67,8 +67,8 @@ export const pyStrings: Deck = {
       choices: [
         'name.endswith((".csv", ".tsv"))',
         'name[-4:] == ".csv" or name[-4:] == ".tsv"',
-        'A regex is required',
-        'name.contains(".csv")',
+        'Only a regex can test both suffixes',
+        'name.contains((".csv", ".tsv"))',
       ],
       answer: 0,
       explanation:
@@ -78,7 +78,7 @@ export const pyStrings: Deck = {
       id: 'st-isdigit',
       type: 'mcq',
       prompt: 'Which check is True for the string `"42"` but False for `"4.2"`?',
-      choices: ['"42".isdigit()', 'isinstance("42", int)', '"42".isnumeric() but not "4.2".isdigit()… both are the same here', 'len("42") == 2'],
+      choices: ['"42".isdigit()', 'isinstance("42", int)', 'bool(float("42"))', 'len("42") == 2'],
       answer: 0,
       explanation:
         'isdigit is True only for pure digit characters: the decimal point fails it. For "is this parseable as a float", use try/except float().',
@@ -99,7 +99,7 @@ export const pyStrings: Deck = {
       prompt: 'Fastest interview-ready anagram check for two words?',
       choices: [
         'Counter(a) == Counter(b)',
-        'sorted(a) == sorted(b) is asymptotically better',
+        'sorted(a) == sorted(b)',
         'a == b[::-1]',
         'set(a) == set(b)',
       ],
@@ -112,10 +112,10 @@ export const pyStrings: Deck = {
       type: 'mcq',
       prompt: '`re.match` vs `re.search`?',
       choices: [
-        'match anchors at the start of the string; search finds the pattern anywhere',
-        'match is case-insensitive; search honors the case of the pattern',
-        'search returns every non-overlapping match as a list; match returns only the first one',
-        'They are identical',
+        'match anchors at the start; search scans anywhere',
+        'match is case-insensitive; search is case-sensitive',
+        'search returns all matches as a list; match returns the first',
+        'They are identical aliases kept for compatibility',
       ],
       answer: 0,
       explanation:
@@ -145,10 +145,10 @@ export const pyStrings: Deck = {
       type: 'mcq',
       prompt: 'Why does `r"<.*>"` match all of `"<a><b>"` instead of just `"<a>"`?',
       choices: [
-        '* is greedy: it takes the longest match; use .*? for non-greedy',
-        'The regex engine scans right to left, so it locks onto the closing > of the last tag first',
-        'Angle brackets are special characters',
-        'It is a Python bug',
+        '* is greedy and takes the longest match; .*? is lazy',
+        'The engine scans right to left and locks onto the last >',
+        'Angle brackets are special regex characters needing escape',
+        'A long-standing backtracking bug in Python\'s re module',
       ],
       answer: 0,
       explanation:
@@ -170,9 +170,9 @@ export const pyStrings: Deck = {
       prompt: 'Clean a string to letters-only lowercase for a palindrome check?',
       choices: [
         '"".join(c.lower() for c in s if c.isalnum())',
-        's.lower().strip(): strip removes punctuation and spaces throughout the string',
-        's.replace(" ", "").lower(): spaces are the only non-letter characters that matter',
-        'set(s.lower())',
+        's.lower().strip() to drop punctuation and spaces',
+        's.replace(" ", "").lower() to drop non-letters',
+        'set(s.lower()) to normalize the characters',
       ],
       answer: 0,
       explanation:
@@ -183,8 +183,8 @@ export const pyStrings: Deck = {
       type: 'mcq',
       prompt: 'What is `"a,b".split(",")` vs `"a,,b".split(",")`?',
       choices: [
-        "['a', 'b'] vs ['a', '', 'b']: empty fields are preserved",
-        'Both give [\'a\', \'b\']: split(sep) collapses runs of the separator like bare split() does',
+        "['a', 'b'] vs ['a', '', 'b']",
+        "['a', 'b'] in both cases",
         'The second raises ValueError',
         "['a,b'] vs ['a', 'b']",
       ],
