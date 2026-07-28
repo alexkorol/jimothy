@@ -170,6 +170,31 @@ export const dsaInterview: Deck = {
       back: 'Reduce to the smallest independently testable component, verify it, then add one piece at a time. Agent: model alone, then one tool, then one task, then a batch, then one failure category at a time. Grid: one fixed row, then the horizontal loop, then the whole grid, then one direction at a time, generalizing only after the explicit cases work. Progressive decomposition is how complex systems are debugged reliably, not just a teaching device.',
     },
     {
+      id: 'dsa-prefix-sum',
+      type: 'fill',
+      prompt: 'Build a prefix-sum array so any range sum becomes one subtraction:',
+      code: 'prefix = [0]\nfor x in nums:\n    prefix.append(prefix[-1] + x)\n# sum of nums[i:j] == prefix[j] - prefix[____]',
+      answers: ['i'],
+      distractors: ['j', '0', 'i - 1'],
+      explanation:
+        'Pay O(n) once to record the running total at every position; afterwards any range query is O(1): "total up to j" minus "total up to i" leaves exactly nums[i:j] (exclusive end, as always). Tiny example: nums = [3, 1, 4] gives prefix = [0, 3, 4, 8]; sum of nums[1:3] = 8 - 3 = 5. The replaced brute force: re-adding the slice for every query, O(n) per query.',
+    },
+    {
+      id: 'dsa-queue',
+      type: 'mcq',
+      prompt: 'Which structure processes items in arrival order (FIFO), and what powers BFS?',
+      choices: ['Queue', 'Stack', 'Heap', 'Linked list'],
+      answer: 0,
+      explanation:
+        'First in, first out: the BFS frontier, task scheduling, buffering. In Python use collections.deque with append/popleft, both O(1); list.pop(0) shifts every element and is O(n). Mirror card: stacks are LIFO and power DFS.',
+    },
+    {
+      id: 'dsa-sorted-info',
+      type: 'flash',
+      front: 'Why does sorted data unlock two pointers and binary search? State the underlying principle.',
+      back: 'Sorted data GIVES you information: one comparison now eliminates many candidates. Two pointers: if the pair sum is too small the left value can pair with nothing smaller, so move left; too large, move right — O(n) instead of O(n²) over pairs. Binary search: one comparison safely discards half the space, and it works on any ordered search space, not just arrays. General principle: exploit structure instead of brute-forcing; an O(n log n) sort often pays for itself by enabling these.',
+    },
+    {
       id: 'dsa-memo',
       type: 'flash',
       front: 'Memoization vs tabulation in dynamic programming?',
