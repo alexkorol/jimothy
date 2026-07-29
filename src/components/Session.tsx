@@ -44,7 +44,7 @@ const END_LINES: Record<'great' | 'mid' | 'rough', string[]> = {
     'Barely a stumble. The schedule will find the weak spots anyway.',
   ],
   mid: [
-    'Solid. The missed ones circle back in a few minutes.',
+    'Solid. The missed ones circle back later today.',
     'Progress is the reps, not the percent.',
     'Good grind. Misses are the cards doing their job.',
   ],
@@ -69,11 +69,16 @@ export function Session({ deck, progress, forceAll, sourceDecks, options, review
     for (const d of sourceDecks) for (const c of d.cards) if (!m.has(c.id)) m.set(c.id, d);
     return m;
   }, [sourceDecks]);
+  // Practice-everything sessions still serve 10-card packs: the shuffled pool
+  // is fixed at session start and consumed one pack at a time.
+  const [pool] = useState<Card[]>(() => (forceAll ? shuffle(deck.cards) : []));
   // One pack, captured at session start. Missed cards are NOT requeued here —
   // they go back to the end of the due queue for later instead.
   const [queue, setQueue] = useState<Card[]>(() =>
-    forceAll ? shuffle(deck.cards) : buildSession(deck, progress, Date.now(), options),
+    forceAll ? pool.slice(0, PACK_SIZE) : buildSession(deck, progress, Date.now(), options),
   );
+  // How much of the forceAll pool has been dealt into packs so far.
+  const [consumed, setConsumed] = useState(queue.length);
   const [index, setIndex] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
   const [missedIds, setMissedIds] = useState<string[]>([]);
@@ -106,12 +111,15 @@ export function Session({ deck, progress, forceAll, sourceDecks, options, review
     const pct = total > 0 ? Math.round((correctCount / total) * 100) : 100;
     const missedCards = deck.cards.filter((c) => missedIds.includes(c.id));
     const goalReached = reviewsToday >= DAILY_GOAL;
-    const left = forceAll
-      ? { due: 0, fresh: 0 }
-      : deckCounts(deck, progress, Date.now(), options?.kind);
-    const nextPackCount =
-      left.due +
-      (options?.includeNew === false ? 0 : Math.min(left.fresh, options?.maxNew ?? Infinity));
+    let nextPackCount: number;
+    if (forceAll) {
+      nextPackCount = pool.length - consumed;
+    } else {
+      const left = deckCounts(deck, progress, Date.now(), options?.kind);
+      nextPackCount =
+        left.due +
+        (options?.includeNew === false ? 0 : Math.min(left.fresh, options?.maxNew ?? Infinity));
+    }
     return (
       <div className="screen">
         <div className="session-end">
@@ -139,7 +147,15 @@ export function Session({ deck, progress, forceAll, sourceDecks, options, review
           {nextPackCount > 0 && (
             <button
               className="btn primary block"
-              onClick={() => restartWith(buildSession(deck, progress, Date.now(), options))}
+              onClick={() => {
+                if (forceAll) {
+                  const next = pool.slice(consumed, consumed + PACK_SIZE);
+                  setConsumed(consumed + next.length);
+                  restartWith(next);
+                } else {
+                  restartWith(buildSession(deck, progress, Date.now(), options));
+                }
+              }}
             >
               Next pack · {Math.min(nextPackCount, PACK_SIZE)} card
               {Math.min(nextPackCount, PACK_SIZE) === 1 ? '' : 's'}

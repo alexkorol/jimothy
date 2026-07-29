@@ -20,6 +20,6 @@ Local-first React PWA for spaced-repetition interview prep (formerly "Breve"; th
 
 ## Session mechanics (do not regress)
 
-- Sessions are 10-card packs (`PACK_SIZE` in `src/session.ts`); no in-session requeue of missed cards (they come back ~10 min later via `srs.ts`).
+- Sessions are 10-card packs (`PACK_SIZE` in `src/session.ts`), including practice-everything (`forceAll`) sessions; no in-session requeue of missed cards (they come back ~4 h later via `srs.ts`).
 - Daily Review is due-only and split into quick (mcq/fill/tf/order) vs longform (flash) via `cardKind()` in `src/types.ts`.
 - Never surface scheduling internals (intervals, ease) in the session loop; grading is binary plus the "Too easy" escape hatch.

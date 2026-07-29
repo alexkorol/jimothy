@@ -1,10 +1,8 @@
 import { getSetting, setSetting } from './storage';
 
 /**
- * Membership plan scaffold. The app currently ships free-tier only; when
- * payments land, the purchase flow should call `savePlan` with the paid tier
- * and expiry, and everything below lights up (Settings shows the Membership
- * section, including the "I met my goal" gift flow).
+ * The local plan model. Paid without expiresAt = the lifetime StoreKit unlock
+ * (iap.ts); paid with expiresAt = a 30-day gift-code plan (giftcodes.ts).
  */
 export type PlanTier = 'free' | 'paid';
 
@@ -39,30 +37,5 @@ export function remainingDays(plan: Plan): number {
   return Math.max(0, Math.floor((plan.expiresAt - Date.now()) / 86400000));
 }
 
-export interface GiftGrant {
-  recipient: string;
-  days: number;
-  /** Redemption code the recipient enters (or a link embedding it). */
-  code: string;
-}
-
-/**
- * "I met my goal" — split the remainder of a paid membership between one or
- * more friends and stop being a subscriber.
- *
- * TODO(payments): this is a local scaffold. Once the payments backend exists,
- * this must call it to void the sender's remaining term and mint real
- * redemption codes; the codes generated here are placeholders and redeem
- * nothing.
- */
-export function createGiftGrants(plan: Plan, recipients: string[]): GiftGrant[] {
-  const names = recipients.map((r) => r.trim()).filter(Boolean);
-  const days = remainingDays(plan);
-  if (names.length === 0 || days < names.length) return [];
-  const share = Math.floor(days / names.length);
-  return names.map((recipient) => ({
-    recipient,
-    days: share,
-    code: `JIMOTHY-GIFT-${Math.random().toString(36).slice(2, 8).toUpperCase()}`,
-  }));
-}
+// The old "split your remaining membership" gift scaffold lived here; it was
+// superseded by the signed gift-code program in giftcodes.ts (docs/gift-codes.md).

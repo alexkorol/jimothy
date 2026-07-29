@@ -10,6 +10,13 @@ const MAX_DUE_SLOTS = 2;
 /** Tracks that never enter the focus strip (still reachable in the full list). */
 const EXCLUDED_TRACKS = new Set(['Spanish']);
 
+/**
+ * Curated starter strip for a brand-new user (no reviews yet): the flagship
+ * free deck of each launch track, in the order a newcomer should meet them.
+ * Random variety picks earn their place only once there is real progress.
+ */
+const STARTER_DECK_IDS = ['big-o', 'py-basics', 'ml-fundamentals', 'ai-interview-drills', 'sql-interview'];
+
 const FOCUS_KEY = 'breve:ui:focus';
 
 /** Small string hash → 32-bit seed. */
@@ -62,6 +69,19 @@ export function pickFocus(
   const counted = decks
     .filter((d) => !EXCLUDED_TRACKS.has(d.track))
     .map((d) => ({ deck: d, ...deckCounts(d, progress, now) }));
+
+  if (Object.keys(progress).length === 0) {
+    const byId = new Map(counted.map((x) => [x.deck.id, x.deck]));
+    const starters = STARTER_DECK_IDS.map((id) => byId.get(id))
+      .filter((d): d is Deck => d !== undefined)
+      .slice(0, FOCUS_SIZE);
+    // Custom-only installs may not have the starter decks; top up from whatever exists.
+    for (const x of counted) {
+      if (starters.length >= FOCUS_SIZE) break;
+      if (!starters.includes(x.deck) && x.fresh > 0) starters.push(x.deck);
+    }
+    return starters;
+  }
 
   const chosen: Deck[] = counted
     .filter((x) => x.due > 0)
