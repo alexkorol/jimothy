@@ -24,7 +24,6 @@ Spaced repetition for code challenges, technical interviews, and Python/ML knowl
   - *Coding Interview* (8): Big-O · DS&A · Intervals & Arrays · Binary Search · Lists/Stacks/Queues · Strings & Hashing · Trees, Graphs & DP · SQL
   - *ML & Data* (7): ML Fundamentals · Statistics & Probability · Metrics · Data Cleaning · Pandas & NumPy · scikit-learn · Features & Model Selection
   - *AI Engineering* (11): AI Interview Drills · Deep Learning Core · Transformers & LLMs · Prompt Engineering · Embeddings & Retrieval · RAG, Agents & Evals · FastAPI & Serving · Inference & Serving · LLM Judges & Bias · Fine-tuning · AI System Design
-  - *My Projects* (3): LedgerLens · SongCraft RAG · prosody-judge (self-quiz decks)
   - *Credentials* (3): AI-103 Azure AI Apps · HF Agents Course · Azure AI Services
 - **Daily Review** — one tap pulls everything due across all decks, plus a 30-review daily goal ring.
 - **Streaks and stats** — daily streak, reviews today/all-time, mastered count.
